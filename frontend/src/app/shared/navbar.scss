@@ -1,0 +1,304 @@
+// ============================================================
+// Navbar / Header principal
+// ============================================================
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--fs-surface);
+  border-bottom: 1px solid var(--fs-border);
+  box-shadow: var(--fs-shadow-xs);
+}
+
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  min-height: 64px;
+  box-sizing: border-box;
+}
+
+// ---------- Logo ----------
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.brand-mark {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--fs-gradient-logo);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 122, 255, 0.35);
+}
+
+.brand-mark mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.brand-ar {
+  position: absolute;
+  right: -7px;
+  top: -7px;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: var(--fs-dark);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--fs-surface);
+}
+
+.brand-ar mat-icon {
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+}
+
+.brand-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  color: var(--fs-dark);
+  white-space: nowrap;
+}
+
+.brand-text span {
+  color: var(--fs-primary);
+}
+
+// ---------- Navegación ----------
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  color: var(--fs-muted);
+  font-weight: 500;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-link mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-link:hover {
+  background: var(--fs-primary-50);
+  color: var(--fs-primary-600);
+}
+
+.nav-link.active {
+  background: var(--fs-primary-50);
+  color: var(--fs-primary-600);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--fs-primary-100);
+}
+
+// ---------- Perfil de usuario ----------
+.navbar-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.profile-pill {
+  appearance: none;
+  border: 1px solid var(--fs-border);
+  background: var(--fs-surface);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 14px 5px 6px;
+  border-radius: 999px;
+  min-height: 46px;
+  font-family: inherit;
+  color: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.profile-pill:hover {
+  border-color: var(--fs-primary);
+  box-shadow: var(--fs-shadow-sm);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--fs-gradient-logo);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.profile-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--fs-dark);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profile-role {
+  font-size: 0.75rem;
+  color: var(--fs-muted);
+}
+
+.profile-suc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--fs-primary-600);
+  background: var(--fs-primary-50);
+  padding: 5px 10px;
+  border-radius: 999px;
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 1;
+}
+
+.profile-suc mat-icon {
+  font-size: 15px;
+  width: 15px;
+  height: 15px;
+}
+
+.chevron {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: var(--fs-muted);
+}
+
+// ---------- Dropdown de usuario ----------
+.menu-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px 12px;
+}
+
+.menu-head .avatar-lg {
+  width: 42px;
+  height: 42px;
+  font-size: 1rem;
+}
+
+.menu-head-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.menu-head-text strong {
+  color: var(--fs-dark);
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-head-text span {
+  color: var(--fs-muted);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menu-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--fs-primary-600) !important;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.menu-role mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+// ---------- Responsive ----------
+@media (max-width: 860px) {
+  .navbar-inner {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .nav-links {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .profile-info {
+    display: none;
+  }
+
+  .profile-suc {
+    display: none;
+  }
+
+  .brand-text {
+    font-size: 1.1rem;
+  }
+}

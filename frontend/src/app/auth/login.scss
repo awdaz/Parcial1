@@ -1,0 +1,28 @@
+.actions {
+  margin-top: 20px;
+}
+
+.actions button {
+  padding: 8px 0;
+}
+
+.error-msg {
+  margin-bottom: 8px;
+  display: block;
+}
+
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.register-link a {
+  font-weight: 600;
+  color: var(--fs-primary);
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}

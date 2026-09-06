@@ -1,0 +1,55 @@
+.back-btn {
+  margin-bottom: 16px;
+}
+
+.center-block {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.detail-error {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.detail-card {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.detail-content {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 16px;
+}
+
+.detail-img {
+  width: 320px;
+  max-width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.detail-info {
+  flex: 1;
+  min-width: 260px;
+}
+
+.detail-info h1 {
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.detail-price {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--fs-primary);
+  margin: 8px 0;
+}
+
+.detail-desc {
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.6;
+}

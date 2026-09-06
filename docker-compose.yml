@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:18-alpine
+    container_name: fashionstore-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 09091991
+      POSTGRES_DB: fashionstore
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/01_creacion_base_datos.sql:/docker-entrypoint-initdb.d/01_creacion_base_datos.sql:ro
+      - ./database/02_poblacion.sql:/docker-entrypoint-initdb.d/02_poblacion.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fashionstore"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  backend:
+    build: ./backend
+    container_name: fashionstore-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:09091991@db:5432/fashionstore
+      SECRET_KEY: fashionstore-secret-key-cambiar-en-produccion
+      ACCESS_TOKEN_EXPIRE_MINUTES: 120
+      STRIPE_SECRET_KEY: sk_test_placeholder
+      STRIPE_CURRENCY: usd
+      DEBUG: "false"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    container_name: fashionstore-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

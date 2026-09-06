@@ -1,0 +1,64 @@
+<header class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" routerLink="/dashboard" matTooltip="FashionStore — Inicio">
+      <span class="brand-mark">
+        <mat-icon>checkroom</mat-icon>
+        <span class="brand-ar"><mat-icon>view_in_ar</mat-icon></span>
+      </span>
+      <span class="brand-text">Fashion<span>&nbsp;Store</span></span>
+    </a>
+
+    <nav class="nav-links">
+      <a
+        *ngFor="let item of navItems"
+        class="nav-link"
+        [routerLink]="item.ruta"
+        routerLinkActive="active"
+        [attr.data-label]="item.label"
+      >
+        <mat-icon>{{ item.icon }}</mat-icon>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="navbar-right">
+      <button
+        class="profile-pill"
+        type="button"
+        [matMenuTriggerFor]="menu"
+        aria-label="Menú de usuario"
+      >
+        <span class="avatar">{{ iniciales() }}</span>
+        <span class="profile-info">
+          <span class="profile-name">{{ usuario()?.nombre || 'Usuario' }}</span>
+          <span class="profile-role">{{ rolLabel() }}</span>
+        </span>
+        <span class="profile-suc">
+          <mat-icon>location_on</mat-icon>
+          {{ sucursalNombre() }}
+        </span>
+        <mat-icon class="chevron">keyboard_arrow_down</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu" class="fs-menu">
+        <div class="menu-head">
+          <span class="avatar avatar-lg">{{ iniciales() }}</span>
+          <div class="menu-head-text">
+            <strong>{{ usuario()?.nombre }}</strong>
+            <span>{{ usuario()?.email }}</span>
+            <span class="menu-role"><mat-icon>badge</mat-icon> {{ rolLabel() }}</span>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="/dashboard">
+          <mat-icon>person</mat-icon>
+          Mi perfil
+        </button>
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          Cerrar sesión
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</header>

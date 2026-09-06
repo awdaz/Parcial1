@@ -1,0 +1,48 @@
+.pronto-card {
+  margin: 48px auto;
+  max-width: 520px;
+  background: var(--fs-surface);
+  border: 1px solid var(--fs-border);
+  border-radius: var(--fs-radius-lg);
+  box-shadow: var(--fs-shadow);
+  padding: 48px 40px;
+  text-align: center;
+}
+
+.pronto-ico {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background: var(--fs-primary-50);
+  color: var(--fs-primary-600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.pronto-ico mat-icon {
+  font-size: 34px;
+  width: 34px;
+  height: 34px;
+}
+
+.pronto-card h1 {
+  font-size: 1.6rem;
+  color: var(--fs-dark);
+  margin-bottom: 12px;
+}
+
+.pronto-card p {
+  color: var(--fs-muted);
+  margin: 0 auto 20px;
+  max-width: 360px;
+}
+
+.pronto-badge {
+  color: var(--fs-dark-700);
+}
+
+.pronto-actions {
+  margin-top: 28px;
+}

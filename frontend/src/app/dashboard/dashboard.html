@@ -1,0 +1,72 @@
+<app-navbar></app-navbar>
+
+<main class="page-container">
+  <section class="hero" [attr.data-rol]="usuario()?.rol">
+    <div class="hero-main">
+      <div class="hero-icon">
+        <mat-icon>{{ info().icon }}</mat-icon>
+      </div>
+      <div class="hero-copy">
+        <span class="hero-eyebrow">Bienvenido a FashionStore</span>
+        <h1>¡Hola, {{ usuario()?.nombre }}!</h1>
+        <p class="hero-sub">{{ info().descripcion }}</p>
+        <div class="hero-badges">
+          <span class="fs-badge badge-blue">
+            <mat-icon>how_to_reg</mat-icon>
+            {{ info().titulo }}
+          </span>
+          <span class="fs-badge badge-violet">
+            <mat-icon>location_on</mat-icon>
+            Sucursal: {{ sucursalNombre() }}
+          </span>
+          <span class="fs-badge badge-soft">
+            <mat-icon>verified</mat-icon>
+            FashionStore
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <button mat-raised-button color="primary" routerLink="/catalogo">
+        <mat-icon>explore</mat-icon>
+        Explorar catálogo
+      </button>
+      <button mat-stroked-button routerLink="/reservas">
+        <mat-icon>inventory_2</mat-icon>
+        Mis reservas
+      </button>
+    </div>
+
+    <div class="hero-meta">
+      <span><mat-icon>mail_outline</mat-icon> {{ usuario()?.email }}</span>
+      <span *ngIf="usuario()?.telefono">
+        <mat-icon>phone</mat-icon> {{ usuario()?.telefono }}
+      </span>
+      <span *ngIf="usuario()?.fecha_registro">
+        <mat-icon>calendar_today</mat-icon>
+        Registro: {{ usuario()?.fecha_registro | date: 'dd MMM yyyy' }}
+      </span>
+    </div>
+  </section>
+
+  <section class="quick-section">
+    <h2 class="sec-title">Acceso rápido</h2>
+    <div class="quick-grid">
+      <mat-card
+        *ngFor="let q of quick"
+        class="quick-card"
+        (click)="ir(q.ruta)"
+      >
+        <div class="quick-ico" [ngClass]="q.color">
+          <mat-icon>{{ q.icon }}</mat-icon>
+        </div>
+        <div class="quick-body">
+          <h3>{{ q.titulo }}</h3>
+          <p>{{ q.desc }}</p>
+        </div>
+        <mat-icon class="quick-arrow">chevron_right</mat-icon>
+      </mat-card>
+    </div>
+  </section>
+</main>

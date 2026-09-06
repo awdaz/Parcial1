@@ -1,0 +1,19 @@
+# Python / FastAPI
+.venv/
+__pycache__/
+*.pyc
+.env
+
+# Angular / Frontend
+node_modules/
+dist/
+.angular/
+
+# Flutter / Mobile
+.dart_tool/
+build/
+.flutter-plugins
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

@@ -1,0 +1,278 @@
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mexpected ":".
+   ╷
+12 │     plain-family: 'Roboto', 'Helvetica Neue', sans-serif,
+   │                                             ^
+   ╵
+  src\styles.scss 12:45  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1m($config.density should be a density configuration object. Got: 0)
+   ╷
+5  │   $fashionstore-typography: mat.define-theme((
+   │ ┌───────────────────────────^
+6  │ │   color: (
+7  │ │     theme-type: light,
+8  │ │     primary: mat.$azure-palette,
+9  │ │     tertiary: mat.$magenta-palette,
+10 │ │   ),
+11 │ │   typography: (
+12 │ │     plain-family: ('Roboto', 'Helvetica Neue', sans-serif),
+13 │ │     regular-weight: 400,
+14 │ │     medium-weight: 500,
+15 │ │     bold-weight: 700,
+16 │ │   ),
+17 │ │   density: 0,
+18 │ │ ));
+   │ └──^
+   ╵
+  src\styles.scss 5:27  root stylesheet[0m [1m[35m[plugin angular-sass][0m
+
+    angular:styles/global:styles:1:8:
+[37m      1 │ @import [32m'src/styles.scss'[37m;
+        ╵         [32m~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'iniciales' does not exist on type 'NavbarComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/navbar.html:31:32:
+[37m      31 │         <span class="avatar">{{ [32miniciales[37m() }}</span>
+         ╵                                 [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component NavbarComponent.
+
+    src/app/shared/navbar.ts:11:15:
+[37m      11 │   templateUrl: [32m'./navbar.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'rolLabel' does not exist on type 'NavbarComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/navbar.html:34:40:
+[37m      34 │           <span class="profile-role">{{ [32mrolLabel[37m() }}</span>
+         ╵                                         [32m~~~~~~~~[0m
+
+  Error occurs in the template of component NavbarComponent.
+
+    src/app/shared/navbar.ts:11:15:
+[37m      11 │   templateUrl: [32m'./navbar.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'sucursalNombre' does not exist on type 'NavbarComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/navbar.html:38:13:
+[37m      38 │           {{ [32msucursalNombre[37m() }}
+         ╵              [32m~~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component NavbarComponent.
+
+    src/app/shared/navbar.ts:11:15:
+[37m      11 │   templateUrl: [32m'./navbar.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'iniciales' does not exist on type 'NavbarComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/navbar.html:45:44:
+[37m      45 │           <span class="avatar avatar-lg">{{ [32miniciales[37m() }}</span>
+         ╵                                             [32m~~~~~~~~~[0m
+
+  Error occurs in the template of component NavbarComponent.
+
+    src/app/shared/navbar.ts:11:15:
+[37m      11 │   templateUrl: [32m'./navbar.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'rolLabel' does not exist on type 'NavbarComponent'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/navbar.html:49:66:
+[37m      49 │ ...ass="menu-role"><mat-icon>badge</mat-icon> {{ [32mrolLabel[37m() }}</span>
+         ╵                                                  [32m~~~~~~~~[0m
+
+  Error occurs in the template of component NavbarComponent.
+
+    src/app/shared/navbar.ts:11:15:
+[37m      11 │   templateUrl: [32m'./navbar.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mNG8001: 'mat-divider' is not a known element:
+1. If 'mat-divider' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+2. If 'mat-divider' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message. Find more at https://next.angular.dev/errors/NG8001[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/shared/navbar.html:52:8:
+[37m      52 │         [32m<mat-divider>[37m</mat-divider>
+         ╵         [32m~~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component NavbarComponent.
+
+    src/app/shared/navbar.ts:11:15:
+[37m      11 │   templateUrl: [32m'./navbar.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'color' does not exist on type 'Signal<RolInfo>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/dashboard/dashboard.html:6:30:
+[37m      6 │       <mat-icon [color]="info.[32mcolor[37m" class="role-icon">{{ info.icon...
+        ╵                               [32m~~~~~[0m
+
+  Error occurs in the template of component DashboardComponent.
+
+    src/app/dashboard/dashboard.ts:28:15:
+[37m      28 │   templateUrl: [32m'./dashboard.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'icon' does not exist on type 'Signal<RolInfo>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/dashboard/dashboard.html:6:63:
+[37m      6 │ ...n [color]="info.color" class="role-icon">{{ info.[32micon[37m }}</mat-icon>
+        ╵                                                     [32m~~~~[0m
+
+  Error occurs in the template of component DashboardComponent.
+
+    src/app/dashboard/dashboard.ts:28:15:
+[37m      28 │   templateUrl: [32m'./dashboard.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'titulo' does not exist on type 'Signal<RolInfo>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/dashboard/dashboard.html:8:33:
+[37m      8 │       <mat-card-subtitle>{{ info.[32mtitulo[37m }}</mat-card-subtitle>
+        ╵                                  [32m~~~~~~[0m
+
+  Error occurs in the template of component DashboardComponent.
+
+    src/app/dashboard/dashboard.ts:28:15:
+[37m      28 │   templateUrl: [32m'./dashboard.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'descripcion' does not exist on type 'Signal<RolInfo>'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/dashboard/dashboard.html:11:17:
+[37m      11 │       <p>{{ info.[32mdescripcion[37m }}</p>
+         ╵                  [32m~~~~~~~~~~~[0m
+
+  Error occurs in the template of component DashboardComponent.
+
+    src/app/dashboard/dashboard.ts:28:15:
+[37m      28 │   templateUrl: [32m'./dashboard.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~[0m
+
+

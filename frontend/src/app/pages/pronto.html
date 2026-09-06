@@ -1,0 +1,21 @@
+<app-navbar></app-navbar>
+
+<main class="page-container">
+  <section class="pronto-card">
+    <div class="pronto-ico">
+      <mat-icon>{{ icon }}</mat-icon>
+    </div>
+    <h1>{{ titulo }}</h1>
+    <p>{{ desc }}</p>
+    <div class="fs-badge badge-soft pronto-badge">
+      <mat-icon>construction</mat-icon>
+      Módulo en construcción
+    </div>
+    <div class="pronto-actions">
+      <button mat-raised-button color="primary" routerLink="/dashboard">
+        <mat-icon>space_dashboard</mat-icon>
+        Volver al dashboard
+      </button>
+    </div>
+  </section>
+</main>

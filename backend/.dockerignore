@@ -1,0 +1,9 @@
+.venv
+__pycache__
+*.pyc
+*.pyo
+.env
+.env.example
+uvicorn.log
+uvicorn.log.err
+alembic/versions/*.pyc

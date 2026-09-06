@@ -1,0 +1,40 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <button mat-button (click)="volver()" class="back-btn">
+    <mat-icon>arrow_back</mat-icon>
+    Volver al catálogo
+  </button>
+
+  <div class="center-block" *ngIf="cargando">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-error *ngIf="error" class="detail-error">{{ error }}</mat-error>
+
+  <mat-card class="detail-card" *ngIf="producto">
+    <div class="detail-content">
+      <img
+        class="detail-img"
+        [src]="producto.imagen_url || 'assets/placeholder.svg'"
+        (error)="onImagenError($event)"
+        alt="{{ producto.nombre }}"
+      />
+      <div class="detail-info">
+        <h1>{{ producto.nombre }}</h1>
+        <p class="detail-price">
+          {{ producto.precio | currency: 'Bs.' : 'symbol' : '1.2-2' }}
+        </p>
+        <p class="detail-desc" *ngIf="producto.descripcion">
+          {{ producto.descripcion }}
+        </p>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" disabled>
+            <mat-icon>add_shopping_cart</mat-icon>
+            Agregar al carrito (próximamente)
+          </button>
+        </mat-card-actions>
+      </div>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,181 @@
+===========================================================================
+ FashionStore - Instrucciones para levantar el sistema (SIN Docker)
+===========================================================================
+
+Esta guia te permite ejecutar el sistema COMPLETO (backend + frontend)
+usando PostgreSQL local. NO requiere Docker.
+
+Arquitectura:
+   Frontend (Angular)   http://localhost:4200
+        |
+        |  peticiones a la API
+        v
+   Backend (FastAPI)    http://127.0.0.1:8000
+        |
+        v
+   PostgreSQL 18        base "fashionstore" (ya poblada)
+
+
+---------------------------------------------------------------------------
+ REQUISITOS PREVIOS (y como verificar)
+---------------------------------------------------------------------------
+1) Python 3.12 ................. python --version
+2) PostgreSQL 18 corriendo ...... servicio "postgresql-x64-18" activo
+3) Node.js 22+ .................. node --version
+4) npm .......................... npm --version
+5) Angular CLI .................. ng version
+
+IMPORTANTE: la base "fashionstore" ya debe existir y estar poblada.
+Si no existe, ejecuta la seccion "PRIMERA VEZ" mas abajo.
+
+
+===========================================================================
+ PASO 1 - Verificar que PostgreSQL este corriendo
+===========================================================================
+Comprueba que el servicio este activo. Si no, iniciarlo:
+
+   Get-Service postgresql-x64-18
+
+   # Si esta detenido ("Stopped"), iniciarlo:
+   Start-Service postgresql-x64-18
+
+Probar conexion a la base:
+
+   "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d fashionstore -c "SELECT 1;"
+   (contraseña del usuario postgres: 09091991)
+
+Si devuelve " ?column? 1 ", la base esta lista.
+
+
+===========================================================================
+ PASO 2 - Levantar el BACKEND (terminal 1)
+===========================================================================
+Desde la carpeta backend/:
+
+   cd "D:\Primer parcial de Si2\E-commerce\backend"
+
+Activar el entorno (con el .venv ya existente):
+
+   .venv\Scripts\Activate.ps1
+
+   # Si el entorno virtual no existiera aun:
+   #   python -m venv .venv
+   #   .venv\Scripts\Activate.ps1
+   #   pip install -r requirements.txt
+
+Iniciar el servidor:
+
+   uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+Verificar que quedo arriba:
+   - API:     http://127.0.0.1:8000/          -> {"status":"ok",...}
+   - Docs:    http://127.0.0.1:8000/docs
+   - OpenAPI: http://127.0.0.1:8000/api/v1/openapi.json
+
+DEJAR ESTA TERMINAL ABIERTA (el servidor corre en primer plano).
+
+
+===========================================================================
+ PASO 3 - Levantar el FRONTEND (terminal 2)
+===========================================================================
+Abrir una NUEVA terminal y ejecutar:
+
+   cd "D:\Primer parcial de Si2\E-commerce\frontend"
+
+Instalar dependencias (solo la primera vez):
+
+   npm install
+
+Iniciar el servidor de desarrollo:
+
+   ng serve --open
+
+   # (equivale a: npm start)
+
+El frontend queda disponible en:  http://localhost:4200
+
+DEJAR ESTA TERMINAL ABIERTA TAMBIEN.
+
+
+===========================================================================
+ PASO 4 - USAR EL SISTEMA
+===========================================================================
+Abrir el navegador en:  http://localhost:4200
+
+Pantallas:
+   /registro   -> Crear cuenta nueva
+   /login      -> Iniciar sesion
+   /dashboard  -> Panel segun el rol
+   /catalogo   -> Tienda con filtros y detalle de producto
+
+Usuarios de ejemplo (contraseñas en texto plano):
+   ADMIN     admin@fashionstore.bo        / admin123
+   ENCARGADO juan.perez@fashionstore.bo   / encargado123
+   CAJERO    carlos.rojas@fashionstore.bo / cajero123
+   CLIENTE   laura.vargas@gmail.com       / cliente123
+
+Flujo rapido de prueba:
+   1) Login con laura.vargas@gmail.com / cliente123
+   2) Entras al Dashboard
+   3) Entra al Catalogo y filtra por categoria o busca "camiseta"
+   4) Abre el detalle de un producto
+
+
+===========================================================================
+ VERIFICACION RAPIDA (todo funciona si:)
+===========================================================================
+[ ] Backend responde en http://127.0.0.1:8000/  -> {"status":"ok",...}
+[ ] Login backend devuelve token:
+      POST http://127.0.0.1:8000/api/v1/auth/login
+      { "email": "laura.vargas@gmail.com", "contrasena": "cliente123" }
+[ ] Frontend carga en http://localhost:4200
+[ ] Puedes hacer login desde la web y ver el catalogo (18 productos)
+
+
+===========================================================================
+ DETENER EL SISTEMA
+===========================================================================
+   - Frontend:  ctrl + C en la terminal 2 (o cerrar la terminal)
+   - Backend:   ctrl + C en la terminal 1 (o cerrar la terminal)
+   PostgreSQL sigue corriendo (es un servicio; no hace falta detenerlo).
+
+
+===========================================================================
+ PRIMERA VEZ (solo si la base "fashionstore" no existe/aun no esta poblada)
+===========================================================================
+Crear la base y poblarla:
+
+   "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -c "CREATE DATABASE fashionstore;"
+   "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d fashionstore -f "D:\Primer parcial de Si2\E-commerce\database\01_creacion_base_datos.sql"
+   "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -d fashionstore -f "D:\Primer parcial de Si2\E-commerce\database\02_poblacion.sql"
+
+(contraseña del usuario postgres: 09091991)
+
+
+===========================================================================
+ SOLUCION DE PROBLEMAS SIN DOCKER
+===========================================================================
+- "Puerto 8000 en uso"    -> ya hay otro uvicorn corriendo; cierra el anterior
+                              o usa otro puerto: uvicorn app.main:app --port 8001
+- "Puerto 4200 en uso"    -> usa: ng serve --port 4300
+- Login da "Internal Server Error"
+                          -> confirma que PostgreSQL este corriendo y la base
+                              poblada (PASO 1).
+- La web no carga productos
+                          -> el backend debe estar arriba en :8000 (PASO 2);
+                              revisa la consola del navegador (F12).
+- "No module named ..."   -> vuelve a ejecutar: pip install -r requirements.txt
+                              dentro del .venv activo.
+- Otra opcion (Docker)    -> si en algun momento quieres levantar TODO aislado
+                              (BD + backend + frontend) en un solo comando,
+                              consulta: docker compose up --build (requiere
+                              Docker Desktop encendido). Ver README.txt.
+
+===========================================================================
+ CREDENCIALES Y PUERTOS
+===========================================================================
+PostgreSQL:  usuario postgres / 09091991   (base: fashionstore)
+Backend:     http://127.0.0.1:8000
+Docs API:    http://127.0.0.1:8000/docs
+Frontend:    http://localhost:4200
+===========================================================================

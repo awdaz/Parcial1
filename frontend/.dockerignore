@@ -1,0 +1,7 @@
+node_modules
+dist
+.angular
+ngserve.log
+ngserve.log.err
+*.log
+.vscode
