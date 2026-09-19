@@ -14,11 +14,24 @@ export interface NavItem {
   ruta: string;
   label: string;
   icon: string;
+  roles?: string[];
 }
 
 export const NAV_ITEMS: NavItem[] = [
   { ruta: '/dashboard', label: 'Dashboard', icon: 'grid_view' },
   { ruta: '/catalogo', label: 'Catálogo', icon: 'storefront' },
+{
+    ruta: '/gestion/productos',
+    label: 'Gestión de productos',
+    icon: 'inventory',
+    roles: ['admin'],
+  },
+  {
+    ruta: '/gestion/usuarios',
+    label: 'Gestión de usuarios',
+    icon: 'manage_accounts',
+    roles: ['admin'],
+  },
   { ruta: '/sucursales', label: 'Sucursales', icon: 'store' },
   { ruta: '/reservas', label: 'Reservas', icon: 'inventory_2' },
   { ruta: '/ventas', label: 'Ventas / POS', icon: 'point_of_sale' },
@@ -53,7 +66,10 @@ export class NavbarComponent {
   private sucursales = inject(SucursalService);
 
   readonly usuario = this.auth.usuario;
-  readonly navItems = NAV_ITEMS;
+  readonly navItems = computed(() => {
+    const rol = this.usuario()?.rol;
+    return NAV_ITEMS.filter((item) => !item.roles || item.roles.includes(rol ?? ''));
+  });
 
   readonly rolLabel = computed(
     () => ROL_LABELS[this.usuario()?.rol ?? ''] ?? this.usuario()?.rol ?? 'Usuario',

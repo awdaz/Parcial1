@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+
+<div class="usr-container">
+  <mat-card class="usr-card">
+    <mat-card-header>
+      <mat-card-title>Gestión de usuarios y roles</mat-card-title>
+      <mat-card-subtitle>Administra cuentas, roles, sucursales y su estado.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="usr-toolbar"><button mat-raised-button color="primary" (click)="abrirNuevo()"><mat-icon>person_add</mat-icon> Nuevo usuario</button></div>
+
+      <form *ngIf="modoFormulario()" [formGroup]="form" (ngSubmit)="guardar()" class="usr-form">
+        <div class="usr-row">
+          <mat-form-field appearance="outline"><mat-label>Nombre completo</mat-label><input matInput formControlName="nombre" /><mat-error>El nombre es obligatorio.</mat-error></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Correo electrónico</mat-label><input matInput type="email" formControlName="email" /><mat-error>Ingresa un correo válido.</mat-error></mat-form-field>
+        </div>
+        <div class="usr-row">
+          <mat-form-field appearance="outline"><mat-label>Teléfono</mat-label><input matInput formControlName="telefono" /></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Rol</mat-label><mat-select formControlName="rol"><mat-option *ngFor="let rol of roles" [value]="rol">{{ rol | titlecase }}</mat-option></mat-select></mat-form-field>
+        </div>
+        <div class="usr-row">
+          <mat-form-field appearance="outline" *ngIf="requiereSucursal()"><mat-label>Sucursal</mat-label><mat-select formControlName="sucursal_id"><mat-option *ngFor="let sucursal of sucursales()" [value]="sucursal.id_sucursal">{{ sucursal.nombre }}</mat-option></mat-select></mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="modoFormulario() === 'nuevo'"><mat-label>Contraseña temporal</mat-label><input matInput type="password" formControlName="contrasena" /><mat-error>Mínimo 6 caracteres.</mat-error></mat-form-field>
+        </div>
+        <div class="actions"><button mat-stroked-button type="button" (click)="cancelar()">Cancelar</button><button mat-raised-button color="primary" type="submit" [disabled]="cargando()">{{ editando() ? 'Guardar cambios' : 'Crear usuario' }}</button></div>
+      </form>
+
+      <mat-error *ngIf="error()" class="error-msg">{{ error() }}</mat-error>
+
+      <table mat-table [dataSource]="usuarios()" class="usr-table">
+        <ng-container matColumnDef="nombre"><th mat-header-cell *matHeaderCellDef>Nombre</th><td mat-cell *matCellDef="let u">{{ u.nombre }}</td></ng-container>
+        <ng-container matColumnDef="email"><th mat-header-cell *matHeaderCellDef>Email</th><td mat-cell *matCellDef="let u">{{ u.email }}</td></ng-container>
+        <ng-container matColumnDef="rol"><th mat-header-cell *matHeaderCellDef>Rol</th><td mat-cell *matCellDef="let u">{{ u.rol | titlecase }}</td></ng-container>
+        <ng-container matColumnDef="sucursal"><th mat-header-cell *matHeaderCellDef>Sucursal</th><td mat-cell *matCellDef="let u">{{ nombreSucursal(u.sucursal_id) }}</td></ng-container>
+        <ng-container matColumnDef="estado"><th mat-header-cell *matHeaderCellDef>Estado</th><td mat-cell *matCellDef="let u"><span class="chip" [class.chip-ok]="u.activo" [class.chip-off]="!u.activo">{{ u.activo ? 'Activo' : 'Inactivo' }}</span></td></ng-container>
+        <ng-container matColumnDef="acciones"><th mat-header-cell *matHeaderCellDef>Acciones</th><td mat-cell *matCellDef="let u"><button mat-icon-button matTooltip="Editar" (click)="abrirEdicion(u)"><mat-icon>edit</mat-icon></button><button *ngIf="u.activo" mat-icon-button color="warn" matTooltip="Desactivar" (click)="solicitarDesactivacion(u)"><mat-icon>person_off</mat-icon></button></td></ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr><tr mat-row *matRowDef="let row; columns: columnas"></tr>
+      </table>
+      <div *ngIf="usuarios().length === 0" class="vacio">No hay usuarios que mostrar.</div>
+      <mat-card *ngIf="confirmandoBaja()" class="confirm-baja"><mat-card-content><strong>Desactivar usuario</strong><p>Este usuario tiene reservas o ventas activas. ¿Desea desactivarlo de todos modos?</p></mat-card-content><mat-card-actions><button mat-stroked-button (click)="confirmandoBaja.set(null)">Cancelar</button><button mat-raised-button color="warn" (click)="confirmarDesactivacion()">Sí, desactivar</button></mat-card-actions></mat-card>
+    </mat-card-content>
+  </mat-card>
+</div>

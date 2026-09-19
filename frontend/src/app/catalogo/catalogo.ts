@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -36,10 +36,10 @@ export class CatalogoComponent implements OnInit {
   private catalogo = inject(CatalogoService);
   private router = inject(Router);
 
-  categorias: Categoria[] = [];
-  productos: Producto[] = [];
-  cargando = true;
-  error: string | null = null;
+  readonly categorias = signal<Categoria[]>([]);
+  readonly productos = signal<Producto[]>([]);
+  readonly cargando = signal(true);
+  readonly error = signal<string | null>(null);
 
   categoria = new FormControl<number | null>(null);
   busqueda = new FormControl<string>('');
@@ -51,7 +51,7 @@ export class CatalogoComponent implements OnInit {
 
   cargarCategorias(): void {
     this.catalogo.listarCategorias().subscribe({
-      next: (c) => (this.categorias = c),
+      next: (c) => this.categorias.set(c),
       error: () => {
         /* categorías opcionales */
       },
@@ -59,8 +59,8 @@ export class CatalogoComponent implements OnInit {
   }
 
   cargarProductos(): void {
-    this.cargando = true;
-    this.error = null;
+    this.cargando.set(true);
+    this.error.set(null);
     this.catalogo
       .listarProductos({
         categoria_id: this.categoria.value,
@@ -68,12 +68,12 @@ export class CatalogoComponent implements OnInit {
       })
       .subscribe({
         next: (p) => {
-          this.productos = p;
-          this.cargando = false;
+          this.productos.set(p);
+          this.cargando.set(false);
         },
         error: (err) => {
-          this.cargando = false;
-          this.error = 'No se pudo cargar el catálogo.';
+          this.cargando.set(false);
+          this.error.set('No se pudo cargar el catálogo.');
           console.error(err);
         },
       });

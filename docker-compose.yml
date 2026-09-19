@@ -5,12 +5,12 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 09091991
+      POSTGRES_PASSWORD: "09091991"
       POSTGRES_DB: fashionstore
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql
       - ./database/01_creacion_base_datos.sql:/docker-entrypoint-initdb.d/01_creacion_base_datos.sql:ro
       - ./database/02_poblacion.sql:/docker-entrypoint-initdb.d/02_poblacion.sql:ro
     healthcheck:
@@ -42,7 +42,7 @@ services:
     container_name: fashionstore-frontend
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - backend
 

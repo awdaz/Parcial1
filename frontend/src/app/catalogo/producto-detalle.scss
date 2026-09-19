@@ -53,3 +53,48 @@
   color: rgba(0, 0, 0, 0.7);
   line-height: 1.6;
 }
+
+.disp-card {
+  max-width: 860px;
+  margin: 20px auto 0;
+}
+
+.disp-filtros {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.disp-error {
+  display: block;
+  margin: 12px 0;
+}
+
+.disp-vacio {
+  margin-top: 16px;
+  padding: 8px;
+}
+
+.disp-table {
+  width: 100%;
+  margin-top: 12px;
+}
+
+.chip {
+  display: inline-block;
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.chip-ok {
+  background: rgba(46, 125, 50, 0.15);
+  color: #2e7d32;
+}
+
+.chip-warn {
+  background: rgba(237, 108, 2, 0.15);
+  color: #ed6c02;
+}

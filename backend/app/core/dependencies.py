@@ -11,6 +11,9 @@ from app.models.usuario import Usuario as UsuarioModel
 
 settings = get_settings()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
+oauth2_scheme_optional = OAuth2PasswordBearer(
+    tokenUrl="/api/v1/auth/login", auto_error=False
+)
 
 
 def get_current_user(
@@ -33,6 +36,25 @@ def get_current_user(
     user = db.get(UsuarioModel, int(user_id))
     if user is None or not user.activo:
         raise credentials_exception
+    return user
+
+
+def get_current_user_optional(
+    token: str | None = Depends(oauth2_scheme_optional),
+    db: Session = Depends(get_db),
+) -> Usuario | None:
+    if not token:
+        return None
+    try:
+        payload = decode_access_token(token)
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            return None
+    except JWTError:
+        return None
+    user = db.get(UsuarioModel, int(user_id))
+    if user is None or not user.activo:
+        return None
     return user
 
 

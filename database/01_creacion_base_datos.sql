@@ -5,10 +5,15 @@
 -- CICLO #1: Autenticación, Ubicación, Catálogo, Inventario, Reservas
 -- ============================================================
 
--- Eliminar y crear la base de datos (ejecutar fuera de transacción)
-DROP DATABASE IF EXISTS fashionstore;
-CREATE DATABASE fashionstore;
-\c fashionstore;
+-- Eliminar y crear la base de datos solo si NO estamos conectados a ella
+-- (así funciona tanto al ejecutarlo contra la BD "postgres" como dentro
+--  de docker-entrypoint-initdb.d, que ya se conecta a "fashionstore")
+SELECT current_database() <> 'fashionstore' AS bd_diferente \gset
+\if :bd_diferente
+  DROP DATABASE IF EXISTS fashionstore;
+  CREATE DATABASE fashionstore;
+  \c fashionstore
+\endif
 
 -- ============================================================
 -- 1. TIPOS ENUM

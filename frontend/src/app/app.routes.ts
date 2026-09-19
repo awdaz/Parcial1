@@ -5,7 +5,11 @@ import { DashboardComponent } from './dashboard/dashboard';
 import { CatalogoComponent } from './catalogo/catalogo';
 import { ProductoDetalleComponent } from './catalogo/producto-detalle';
 import { ProntoComponent } from './pages/pronto';
-import { authGuard } from './core/auth.guard';
+import { PerfilComponent } from './perfil/perfil';
+import { SucursalesComponent } from './sucursales/sucursales';
+import { CatalogoAdminComponent } from './catalogo-admin/catalogo-admin';
+import { UsuariosAdminComponent } from './usuarios-admin/usuarios-admin';
+import { adminGuard, authGuard } from './core/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -14,6 +18,11 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'perfil',
+    component: PerfilComponent,
     canActivate: [authGuard],
   },
   {
@@ -27,13 +36,18 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'gestion/productos',
+    component: CatalogoAdminComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
+    path: 'gestion/usuarios',
+    component: UsuariosAdminComponent,
+    canActivate: [authGuard, adminGuard],
+  },
+  {
     path: 'sucursales',
-    component: ProntoComponent,
-    data: {
-      titulo: 'Sucursales',
-      icon: 'store',
-      desc: 'Consulta las sucursales, horarios y disponibilidad de prendas en cada tienda.',
-    },
+    component: SucursalesComponent,
     canActivate: [authGuard],
   },
   {

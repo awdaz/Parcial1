@@ -53,7 +53,7 @@ export class DashboardComponent {
     encargado: {
       icon: 'assignment_ind',
       titulo: 'Encargado de Sucursal',
-      descripcion: 'Gestiona el catálogo, inventario, reservas y ventas de tu sucursal.',
+      descripcion: 'Gestiona inventario, reservas y ventas de tu sucursal.',
     },
     cajero: {
       icon: 'point_of_sale',
@@ -76,7 +76,7 @@ export class DashboardComponent {
     this.sucursales.nombreDe(this.usuario()?.sucursal_id ?? null),
   );
 
-  readonly quick: QuickItem[] = [
+  private readonly quickBase: QuickItem[] = [
     {
       ruta: '/catalogo',
       icon: 'storefront',
@@ -106,6 +106,20 @@ export class DashboardComponent {
       color: 'q-amber',
     },
   ];
+
+  readonly quick = computed(() => {
+    const accesos = [...this.quickBase];
+    if (this.usuario()?.rol === 'admin') {
+      accesos.unshift({
+        ruta: '/gestion/productos',
+        icon: 'inventory',
+        titulo: 'Gestión de productos',
+        desc: 'Crea, edita y desactiva productos y sus variantes.',
+        color: 'q-blue',
+      });
+    }
+    return accesos;
+  });
 
   ir(ruta: string): void {
     this.router.navigate([ruta]);

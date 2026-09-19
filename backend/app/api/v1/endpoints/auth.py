@@ -8,6 +8,7 @@ from app.db.session import get_db
 from app.models import Usuario, RolUsuario
 from app.schemas.usuario import (
     LoginRequest,
+    PerfilUpdate,
     Token,
     UsuarioCreate,
     UsuarioOut,
@@ -72,3 +73,33 @@ def login_form(
 @router.get("/me", response_model=UsuarioOut, summary="Obtener usuario autenticado")
 def read_me(current_user: Usuario = Depends(get_current_user)):
     return current_user
+
+
+@router.patch(
+    "/me",
+    response_model=UsuarioOut,
+    summary="Actualizar el perfil del usuario autenticado (CU-03)",
+)
+def update_me(
+    data: PerfilUpdate,
+    db: Session = Depends(get_db),
+    current_user: Usuario = Depends(get_current_user),
+):
+    duplicado = (
+        db.query(Usuario)
+        .filter(
+            Usuario.email == data.email,
+            Usuario.id_usuario != current_user.id_usuario,
+        )
+        .first()
+    )
+    if duplicado:
+        raise HTTPException(status_code=400, detail="El correo ya está en uso")
+
+    usuario = db.get(Usuario, current_user.id_usuario)
+    usuario.nombre = data.nombre
+    usuario.email = data.email
+    usuario.telefono = data.telefono
+    db.commit()
+    db.refresh(usuario)
+    return usuario

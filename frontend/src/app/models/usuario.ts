@@ -20,6 +20,12 @@ export interface LoginRequest {
   contrasena: string;
 }
 
+export interface ProfileUpdate {
+  nombre: string;
+  email: string;
+  telefono?: string | null;
+}
+
 export interface RegisterRequest {
   nombre: string;
   email: string;
@@ -27,4 +33,13 @@ export interface RegisterRequest {
   telefono?: string;
   rol?: string;
   sucursal_id?: number | null;
+}
+
+export interface UsuarioAdminForm {
+  nombre: string;
+  email: string;
+  telefono?: string | null;
+  rol: string;
+  sucursal_id?: number | null;
+  contrasena?: string;
 }

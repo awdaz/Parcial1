@@ -10,7 +10,7 @@
 
     <nav class="nav-links">
       <a
-        *ngFor="let item of navItems"
+        *ngFor="let item of navItems()"
         class="nav-link"
         [routerLink]="item.ruta"
         routerLinkActive="active"
@@ -50,7 +50,7 @@
           </div>
         </div>
         <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="/dashboard">
+        <button mat-menu-item routerLink="/perfil">
           <mat-icon>person</mat-icon>
           Mi perfil
         </button>

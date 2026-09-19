@@ -1,5 +1,5 @@
-from datetime import date, datetime
-from pydantic import BaseModel, ConfigDict, Field
+from datetime import date, datetime, time
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from app.models.enums import (
     EstadoReserva,
@@ -26,16 +26,45 @@ class SucursalBase(BaseModel):
 
 
 class SucursalCreate(SucursalBase):
-    horario_apertura: str
-    horario_cierre: str
+    horario_apertura: time
+    horario_cierre: time
+
+    @model_validator(mode="after")
+    def validar_horario(self):
+        if self.horario_apertura >= self.horario_cierre:
+            raise ValueError("El horario de apertura debe ser anterior al horario de cierre")
+        return self
+
+
+class SucursalUpdate(BaseModel):
+    ciudad_id: int | None = None
+    nombre: str | None = Field(default=None, min_length=2, max_length=150)
+    direccion: str | None = Field(default=None, min_length=3, max_length=255)
+    telefono: str | None = None
+    horario_apertura: time | None = None
+    horario_cierre: time | None = None
+    activo: bool | None = None
+
+    @model_validator(mode="after")
+    def validar_horario(self):
+        if (
+            self.horario_apertura is not None
+            and self.horario_cierre is not None
+            and self.horario_apertura >= self.horario_cierre
+        ):
+            raise ValueError(
+                "El horario de apertura debe ser anterior al horario de cierre"
+            )
+        return self
 
 
 class SucursalOut(SucursalBase):
     model_config = ConfigDict(from_attributes=True)
     id_sucursal: int
-    horario_apertura: object
-    horario_cierre: object
+    horario_apertura: time
+    horario_cierre: time
     activo: bool
+    ciudad: CiudadOut | None = None
 
 
 # ============================================================
@@ -118,23 +147,30 @@ class ProductoUpdate(BaseModel):
     activo: bool | None = None
 
 
-class ProductoOut(ProductoBase):
-    model_config = ConfigDict(from_attributes=True)
-    id_producto: int
-    activo: bool
-
-
 class ProductoVarianteCreate(BaseModel):
     producto_id: int
     color_id: int
     talla_id: int
-    sku: str
+    sku: str | None = Field(default=None, max_length=50)
     precio_extra: float = 0
 
 
 class ProductoVarianteOut(ProductoVarianteCreate):
     model_config = ConfigDict(from_attributes=True)
     id_variante: int
+    color: ColorOut | None = None
+    talla: TallaOut | None = None
+
+
+class ProductoOut(ProductoBase):
+    model_config = ConfigDict(from_attributes=True)
+    id_producto: int
+    activo: bool
+    categoria: CategoriaOut | None = None
+    temporada: TemporadaOut | None = None
+    proveedor: ProveedorOut | None = None
+    coleccion: ColeccionOut | None = None
+    variantes: list[ProductoVarianteOut] = []
 
 
 # ============================================================
@@ -150,6 +186,18 @@ class InventarioOut(BaseModel):
     cantidad_reservada: int
     cantidad_recibida: int
     stock_minimo: int
+
+
+class SucursalDisponibilidadOut(BaseModel):
+    variante_id: int
+    sucursal_id: int
+    nombre_sucursal: str
+    ciudad: str
+    cantidad_disponible: int
+    cantidad_reservada: int
+    cantidad_recibida: int
+    stock_minimo: int
+    estado: str
 
 
 # ============================================================

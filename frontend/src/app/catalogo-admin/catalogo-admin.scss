@@ -1,0 +1,99 @@
+.cap-container {
+  max-width: 1100px;
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+.cap-card {
+  padding: 8px 16px 16px;
+}
+
+.cap-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 12px 0 16px;
+}
+
+.cap-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 24px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+}
+
+.cap-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.cap-form-row mat-form-field,
+.cap-full {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.cap-variantes {
+  margin-bottom: 24px;
+}
+
+.cap-variantes .cap-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: center;
+}
+
+.cap-variantes .cap-form-row mat-form-field {
+  width: 100%;
+}
+
+.cap-table {
+  width: 100%;
+}
+
+.chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.chip-ok {
+  background: #e6f4ea;
+  color: #1e8e3e;
+}
+
+.chip-off {
+  background: #fce8e6;
+  color: #d93025;
+}
+
+.vacio {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.55);
+  padding: 24px;
+}
+
+.error-msg {
+  display: block;
+  margin-top: 8px;
+}
+
+.cap-confirm {
+  margin-top: 16px;
+  border: 1px solid #d93025;
+}
+
+.cap-confirm mat-card-actions {
+  justify-content: flex-end;
+  padding: 0 16px 12px;
+}

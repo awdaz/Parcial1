@@ -54,7 +54,7 @@
     <h2 class="sec-title">Acceso rápido</h2>
     <div class="quick-grid">
       <mat-card
-        *ngFor="let q of quick"
+        *ngFor="let q of quick()"
         class="quick-card"
         (click)="ir(q.ruta)"
       >

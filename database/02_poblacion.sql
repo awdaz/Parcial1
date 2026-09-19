@@ -133,24 +133,24 @@ INSERT INTO proveedores (nombre, contacto, telefono, email, direccion) VALUES
 -- PRODUCTOS (18 productos realistas)
 -- ============================================================
 INSERT INTO productos (nombre, descripcion, precio, categoria_id, temporada_id, coleccion_id, proveedor_id, imagen_url, modelo_3d_url, activo) VALUES
-('Camiseta Basica', 'Camiseta de algodon 100%', 49.50, 1, 1, 1, 1, 'https://img.fashionstore.bo/camiseta-basica.png', 'https://models.fashionstore.bo/camiseta-basica.glb', TRUE),
-('Pantalon Jeans', 'Jeans clasico de corte recto', 149.00, 2, 1, 1, 1, 'https://img.fashionstore.bo/pantalon-jeans.png', 'https://models.fashionstore.bo/pantalon-jeans.glb', TRUE),
-('Vestido Floral', 'Vestido ligero con estampado floral', 199.50, 3, 1, 1, 2, 'https://img.fashionstore.bo/vestido-floral.png', 'https://models.fashionstore.bo/vestido-floral.glb', TRUE),
-('Abrigo Invierno', 'Abrigo de lana para el frio', 349.00, 4, 2, 2, 2, 'https://img.fashionstore.bo/abrigo-invierno.png', 'https://models.fashionstore.bo/abrigo-invierno.glb', TRUE),
-('Chompa Escolar', 'Chompa de uniforme escolar', 89.00, 1, 3, 3, 1, 'https://img.fashionstore.bo/chompa-escolar.png', 'https://models.fashionstore.bo/chompa-escolar.glb', TRUE),
-('Chaqueta de Cuero', 'Chaqueta de cuero clasica', 450.00, 5, 4, 4, 4, 'https://img.fashionstore.bo/chaqueta-cuero.png', 'https://models.fashionstore.bo/chaqueta-cuero.glb', TRUE),
-('Falda Plisada', 'Falda plisada elegante', 129.00, 6, 1, 1, 2, 'https://img.fashionstore.bo/falda-plisada.png', 'https://models.fashionstore.bo/falda-plisada.glb', TRUE),
-('Bufanda de Lana', 'Bufanda tejida de lana', 45.00, 7, 2, 2, 3, 'https://img.fashionstore.bo/bufanda-lana.png', 'https://models.fashionstore.bo/bufanda-lana.glb', TRUE),
-('Camisa Formal', 'Camisa formal de vestir', 119.00, 1, 1, 1, 1, 'https://img.fashionstore.bo/camisa-formal.png', 'https://models.fashionstore.bo/camisa-formal.glb', TRUE),
-('Pantalon Chino', 'Pantalon chino comodo y casual', 139.00, 2, 1, 1, 4, 'https://img.fashionstore.bo/pantalon-chino.png', 'https://models.fashionstore.bo/pantalon-chino.glb', TRUE),
-('Vestido de Noche', 'Vestido largo de noche', 289.00, 3, 4, 4, 5, 'https://img.fashionstore.bo/vestido-noche.png', 'https://models.fashionstore.bo/vestido-noche.glb', TRUE),
-('Sweater Oversize', 'Sueter de punto oversize', 159.00, 4, 2, 2, 3, 'https://img.fashionstore.bo/sweater-oversize.png', 'https://models.fashionstore.bo/sweater-oversize.glb', TRUE),
-('Gorra Deportiva', 'Gorra deportiva con logo', 39.00, 7, 1, 1, 4, 'https://img.fashionstore.bo/gorra-deportiva.png', NULL, TRUE),
-('Blazer Mujer', 'Blazer sastre para mujer', 259.00, 5, 4, 4, 5, 'https://img.fashionstore.bo/blazer-mujer.png', 'https://models.fashionstore.bo/blazer-mujer.glb', TRUE),
-('Falda Jeans', 'Falda de mezclilla', 119.00, 6, 1, 1, 1, 'https://img.fashionstore.bo/falda-jeans.png', 'https://models.fashionstore.bo/falda-jeans.glb', TRUE),
-('Cinturon de Cuero', 'Cinturon de cuero genuino', 69.00, 7, 1, 1, 4, 'https://img.fashionstore.bo/cinturon-cuero.png', NULL, TRUE),
-('Campera Jeans', 'Campera de jeans con forro interior', 199.00, 5, 2, 2, 1, 'https://img.fashionstore.bo/campera-jeans.png', 'https://models.fashionstore.bo/campera-jeans.glb', TRUE),
-('Polo Deportivo', 'Polo deportivo de cuello', 119.00, 1, 1, 1, 5, 'https://img.fashionstore.bo/polo-deportivo.png', 'https://models.fashionstore.bo/polo-deportivo.glb', TRUE);
+('Camiseta Basica', 'Camiseta de algodon 100%', 49.50, 1, 1, 1, 1, NULL, NULL, TRUE),
+('Pantalon Jeans', 'Jeans clasico de corte recto', 149.00, 2, 1, 1, 1, NULL, NULL, TRUE),
+('Vestido Floral', 'Vestido ligero con estampado floral', 199.50, 3, 1, 1, 2, NULL, NULL, TRUE),
+('Abrigo Invierno', 'Abrigo de lana para el frio', 349.00, 4, 2, 2, 2, NULL, NULL, TRUE),
+('Chompa Escolar', 'Chompa de uniforme escolar', 89.00, 1, 3, 3, 1, NULL, NULL, TRUE),
+('Chaqueta de Cuero', 'Chaqueta de cuero clasica', 450.00, 5, 4, 4, 4, NULL, NULL, TRUE),
+('Falda Plisada', 'Falda plisada elegante', 129.00, 6, 1, 1, 2, NULL, NULL, TRUE),
+('Bufanda de Lana', 'Bufanda tejida de lana', 45.00, 7, 2, 2, 3, NULL, NULL, TRUE),
+('Camisa Formal', 'Camisa formal de vestir', 119.00, 1, 1, 1, 1, NULL, NULL, TRUE),
+('Pantalon Chino', 'Pantalon chino comodo y casual', 139.00, 2, 1, 1, 4, NULL, NULL, TRUE),
+('Vestido de Noche', 'Vestido largo de noche', 289.00, 3, 4, 4, 5, NULL, NULL, TRUE),
+('Sweater Oversize', 'Sueter de punto oversize', 159.00, 4, 2, 2, 3, NULL, NULL, TRUE),
+('Gorra Deportiva', 'Gorra deportiva con logo', 39.00, 7, 1, 1, 4, NULL, NULL, TRUE),
+('Blazer Mujer', 'Blazer sastre para mujer', 259.00, 5, 4, 4, 5, NULL, NULL, TRUE),
+('Falda Jeans', 'Falda de mezclilla', 119.00, 6, 1, 1, 1, NULL, NULL, TRUE),
+('Cinturon de Cuero', 'Cinturon de cuero genuino', 69.00, 7, 1, 1, 4, NULL, NULL, TRUE),
+('Campera Jeans', 'Campera de jeans con forro interior', 199.00, 5, 2, 2, 1, NULL, NULL, TRUE),
+('Polo Deportivo', 'Polo deportivo de cuello', 119.00, 1, 1, 1, 5, NULL, NULL, TRUE);
 
 -- ============================================================
 -- PRODUCTO_VARIANTES (46 variantes)

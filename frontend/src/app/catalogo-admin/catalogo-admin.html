@@ -1,0 +1,231 @@
+<app-navbar></app-navbar>
+
+<div class="cap-container">
+  <mat-card class="cap-card">
+    <mat-card-header>
+      <mat-card-title>Gestión de productos</mat-card-title>
+      <mat-card-subtitle>
+        Crea, edita o desactiva los productos del catálogo y administra sus variantes.
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="cap-toolbar">
+        <button *ngIf="esGestor()" mat-raised-button color="primary" (click)="abrirNuevo()">
+          <mat-icon>add</mat-icon>
+          Nuevo producto
+        </button>
+      </div>
+
+      <form *ngIf="esGestor() && modoFormulario()" [formGroup]="form" (ngSubmit)="onGuardar()" class="cap-form">
+        <div class="cap-form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" placeholder="Camisa Oxford Slim" />
+            <mat-error *ngIf="form.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+            <mat-error *ngIf="form.get('nombre')?.hasError('minlength')">Mínimo 2 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Precio (Bs)</mat-label>
+            <input matInput formControlName="precio" type="number" min="0.01" step="0.01" />
+            <mat-error *ngIf="form.get('precio')?.hasError('required')">El precio es obligatorio</mat-error>
+            <mat-error *ngIf="form.get('precio')?.hasError('min')">El precio debe ser mayor a cero</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="cap-full" appearance="outline">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput formControlName="descripcion" rows="2"></textarea>
+        </mat-form-field>
+
+        <div class="cap-form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="categoria_id">
+              <mat-option *ngFor="let c of categorias()" [value]="c.id_categoria">{{ c.nombre }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('categoria_id')?.hasError('required')">Selecciona una categoría</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Proveedor</mat-label>
+            <mat-select formControlName="proveedor_id">
+              <mat-option *ngFor="let p of proveedores()" [value]="p.id_proveedor">{{ p.nombre }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('proveedor_id')?.hasError('required')">Selecciona un proveedor</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="cap-form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Temporada</mat-label>
+            <mat-select formControlName="temporada_id">
+              <mat-option *ngFor="let t of temporadas()" [value]="t.id_temporada">{{ t.nombre }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('temporada_id')?.hasError('required')">Selecciona una temporada</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Colección (opcional)</mat-label>
+            <mat-select formControlName="coleccion_id">
+              <mat-option [value]="null">— Sin colección —</mat-option>
+              <mat-option *ngFor="let c of colecciones()" [value]="c.id_coleccion">{{ c.nombre }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="cap-form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>URL de imagen</mat-label>
+            <input matInput formControlName="imagen_url" placeholder="https://…/img.jpg" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>URL de modelo 3D</mat-label>
+            <input matInput formControlName="modelo_3d_url" placeholder="https://…/modelo.glb" />
+          </mat-form-field>
+        </div>
+
+        <mat-error *ngIf="error()" class="error-msg">{{ error() }}</mat-error>
+
+        <div class="actions">
+          <button mat-stroked-button type="button" (click)="cancelar()" [disabled]="cargando()">Cancelar</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="cargando()">
+            <mat-spinner *ngIf="cargando()" diameter="20"></mat-spinner>
+            <span *ngIf="!cargando()">{{ editando() ? 'Guardar cambios' : 'Guardar producto y variantes' }}</span>
+          </button>
+        </div>
+      </form>
+
+      <mat-card *ngIf="modoFormulario()" class="cap-variantes" data-cy="variantes">
+        <mat-card-header>
+          <mat-card-title>
+            {{ editando() ? 'Variantes de: ' + editando()?.nombre : 'Variantes del nuevo producto' }}
+          </mat-card-title>
+          <mat-card-subtitle>
+            Selecciona tallas y colores. El SKU se genera automáticamente al guardar.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="cap-form-row" [formGroup]="varianteForm">
+            <mat-form-field appearance="outline">
+              <mat-label>Color</mat-label>
+              <mat-select formControlName="color_id">
+                <mat-option *ngFor="let c of colores()" [value]="c.id_color">{{ c.nombre }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="varianteForm.get('color_id')?.hasError('required')">Selecciona un color</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Talla</mat-label>
+              <mat-select formControlName="talla_id">
+                <mat-option *ngFor="let t of tallas()" [value]="t.id_talla">{{ t.nombre }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="varianteForm.get('talla_id')?.hasError('required')">Selecciona una talla</mat-error>
+            </mat-form-field>
+
+            <button mat-raised-button color="primary" (click)="agregarVariante()" [disabled]="cargando()">
+              <mat-icon>add_box</mat-icon>
+              Agregar
+            </button>
+          </div>
+
+          <table mat-table [dataSource]="editando()?.variantes ?? variantesPendientes()" class="cap-table">
+            <ng-container matColumnDef="color">
+              <th mat-header-cell *matHeaderCellDef>Color</th>
+              <td mat-cell *matCellDef="let v">{{ v.color?.nombre ?? nombreColor(v.color_id) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="talla">
+              <th mat-header-cell *matHeaderCellDef>Talla</th>
+              <td mat-cell *matCellDef="let v">{{ v.talla?.nombre ?? nombreTalla(v.talla_id) }}</td>
+            </ng-container>
+            <ng-container matColumnDef="sku">
+              <th mat-header-cell *matHeaderCellDef>SKU</th>
+              <td mat-cell *matCellDef="let v">{{ v.sku ?? 'Se generará al guardar' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="acciones">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let v">
+                <button
+                  mat-icon-button
+                  matTooltip="Eliminar variante"
+                  color="warn"
+                  (click)="editando() ? quitarVariante(v.id_variante) : quitarVariantePendiente(variantesPendientes().indexOf(v))"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+          <tr mat-header-row *matHeaderRowDef="['color','talla','sku','acciones']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['color','talla','sku','acciones']"></tr>
+          </table>
+          <div *ngIf="!editando() && variantesPendientes().length === 0" class="vacio">
+            Agrega al menos una combinación de color y talla antes de guardar.
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div class="cap-list">
+        <table mat-table [dataSource]="productos()" class="cap-table">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Producto</th>
+            <td mat-cell *matCellDef="let p">{{ p.nombre }}</td>
+          </ng-container>
+          <ng-container matColumnDef="precio">
+            <th mat-header-cell *matHeaderCellDef>Precio</th>
+            <td mat-cell *matCellDef="let p">Bs {{ p.precio }}</td>
+          </ng-container>
+          <ng-container matColumnDef="categoria">
+            <th mat-header-cell *matHeaderCellDef>Categoría</th>
+            <td mat-cell *matCellDef="let p">{{ nombreCategoria(p.categoria_id) }}</td>
+          </ng-container>
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let p">
+              <span class="chip" [class.chip-ok]="p.activo" [class.chip-off]="!p.activo">
+                {{ p.activo ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let p">
+              <button mat-icon-button matTooltip="Editar" (click)="abrirEdicion(p)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button matTooltip="Desactivar" color="warn" (click)="desactivar(p)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+        </table>
+
+        <div *ngIf="productos().length === 0" class="vacio">No hay productos que mostrar.</div>
+
+        <mat-card *ngIf="confirmandoBaja() !== null" class="cap-confirm" data-cy="confirmar-baja">
+          <mat-card-content>
+            <strong>Desactivar producto</strong>
+            <p>
+              Este producto tiene operaciones activas (movimientos de inventario o ventas).
+              ¿Está seguro de desactivarlo de todos modos?
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-stroked-button (click)="confirmandoBaja.set(null)">Cancelar</button>
+            <button mat-raised-button color="warn" (click)="confirmarBaja(productoEnConfirmacion()!)">
+              Sí, desactivar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+
+        <div *ngIf="!esGestor()" class="vacio">
+          Solo los administradores pueden gestionar el catálogo.
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

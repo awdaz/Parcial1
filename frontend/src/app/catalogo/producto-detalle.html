@@ -6,27 +6,29 @@
     Volver al catálogo
   </button>
 
-  <div class="center-block" *ngIf="cargando">
+  <div class="center-block" *ngIf="cargando()">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-error *ngIf="error" class="detail-error">{{ error }}</mat-error>
+  <mat-error *ngIf="error()" class="detail-error">{{ error() }}</mat-error>
 
-  <mat-card class="detail-card" *ngIf="producto">
+  <mat-card class="detail-card" *ngIf="producto()">
     <div class="detail-content">
       <img
         class="detail-img"
-        [src]="producto.imagen_url || 'assets/placeholder.svg'"
+        [src]="producto()!.imagen_url || 'assets/placeholder.svg'"
+        loading="lazy"
+        decoding="async"
         (error)="onImagenError($event)"
-        alt="{{ producto.nombre }}"
+        alt="{{ producto()!.nombre }}"
       />
       <div class="detail-info">
-        <h1>{{ producto.nombre }}</h1>
+        <h1>{{ producto()!.nombre }}</h1>
         <p class="detail-price">
-          {{ producto.precio | currency: 'Bs.' : 'symbol' : '1.2-2' }}
+          {{ producto()!.precio | currency: 'Bs.' : 'symbol' : '1.2-2' }}
         </p>
-        <p class="detail-desc" *ngIf="producto.descripcion">
-          {{ producto.descripcion }}
+        <p class="detail-desc" *ngIf="producto()!.descripcion">
+          {{ producto()!.descripcion }}
         </p>
         <mat-card-actions>
           <button mat-raised-button color="primary" disabled>
@@ -36,5 +38,93 @@
         </mat-card-actions>
       </div>
     </div>
+  </mat-card>
+
+  <mat-card class="detail-card disp-card" *ngIf="producto() && (producto()!.variantes?.length ?? 0) > 0">
+    <mat-card-header>
+      <mat-card-title>Disponibilidad por sucursal</mat-card-title>
+      <mat-card-subtitle>Elige talla y color para consultar el stock en cada sucursal.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="disp-filtros">
+        <mat-form-field appearance="outline">
+          <mat-label>Talla</mat-label>
+          <mat-select [value]="tallaSel()" (selectionChange)="onTalla($event.value)">
+            <mat-option *ngFor="let t of tallas()" [value]="t.id_talla">
+              {{ t.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <mat-select [value]="colorSel()" (selectionChange)="onColor($event.value)">
+            <mat-option *ngFor="let c of colores()" [value]="c.id_color">
+              {{ c.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" *ngIf="ciudades().length">
+          <mat-label>Filtrar por ciudad</mat-label>
+          <mat-select [value]="ciudadSel()" (selectionChange)="onCiudad($event.value)">
+            <mat-option [value]="null">Todas las ciudades</mat-option>
+            <mat-option *ngFor="let ci of ciudades()" [value]="ci.id_ciudad">
+              {{ ci.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="center-block" *ngIf="cargandoDisp()">
+        <mat-spinner diameter="32"></mat-spinner>
+      </div>
+
+      <mat-error *ngIf="errorDisp()" class="disp-error">{{ errorDisp() }}</mat-error>
+
+      <mat-card *ngIf="varianteSel() && !cargandoDisp() && !errorDisp() && disponibilidad().length === 0"
+                class="disp-vacio">
+        <mat-card-content>Este producto no está disponible en ninguna tienda.</mat-card-content>
+      </mat-card>
+
+      <table mat-table [dataSource]="disponibilidad()" class="disp-table"
+             *ngIf="!cargandoDisp() && !errorDisp() && disponibilidad().length > 0">
+        <ng-container matColumnDef="sucursal">
+          <th mat-header-cell *matHeaderCellDef>Sucursal</th>
+          <td mat-cell *matCellDef="let d">{{ d.nombre_sucursal }}</td>
+        </ng-container>
+        <ng-container matColumnDef="ciudad">
+          <th mat-header-cell *matHeaderCellDef>Ciudad</th>
+          <td mat-cell *matCellDef="let d">{{ d.ciudad }}</td>
+        </ng-container>
+        <ng-container matColumnDef="disponible">
+          <th mat-header-cell *matHeaderCellDef>Disponible</th>
+          <td mat-cell *matCellDef="let d">{{ d.cantidad_disponible }}</td>
+        </ng-container>
+        <ng-container matColumnDef="reservada">
+          <th mat-header-cell *matHeaderCellDef>Reservadas</th>
+          <td mat-cell *matCellDef="let d">{{ d.cantidad_reservada }}</td>
+        </ng-container>
+        <ng-container matColumnDef="recibida">
+          <th mat-header-cell *matHeaderCellDef>Próximas a ingresar</th>
+          <td mat-cell *matCellDef="let d">{{ d.cantidad_recibida }}</td>
+        </ng-container>
+        <ng-container matColumnDef="stockMinimo">
+          <th mat-header-cell *matHeaderCellDef>Stock mínimo</th>
+          <td mat-cell *matCellDef="let d">{{ d.stock_minimo }}</td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let d">
+            <span class="chip" [class.chip-ok]="d.estado === 'Disponible'"
+                              [class.chip-warn]="d.estado !== 'Disponible'">
+              {{ d.estado }}
+            </span>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnas"></tr>
+      </table>
+    </mat-card-content>
   </mat-card>
 </div>

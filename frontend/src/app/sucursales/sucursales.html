@@ -1,0 +1,176 @@
+<app-navbar></app-navbar>
+
+<div class="suc-container">
+  <mat-card class="suc-card">
+    <mat-card-header>
+      <mat-card-title>Sucursales</mat-card-title>
+      <mat-card-subtitle>
+        {{
+          isAdmin()
+            ? 'Administra las tiendas: crea, edita o desactiva cada sucursal.'
+            : 'Consulta las sucursales activas, horarios y direcciones.'
+        }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="suc-toolbar">
+        <button *ngIf="isAdmin()" mat-raised-button color="primary" (click)="abrirNueva()">
+          <mat-icon>add</mat-icon>
+          Nueva sucursal
+        </button>
+      </div>
+
+      <form
+        *ngIf="isAdmin()"
+        [formGroup]="form"
+        (ngSubmit)="onGuardar()"
+        class="suc-form"
+      >
+        <div class="suc-form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="nombre" placeholder="Sucursal Centro La Paz" />
+            <mat-error *ngIf="form.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+            <mat-error *ngIf="form.get('nombre')?.hasError('minlength')">Mínimo 2 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Ciudad</mat-label>
+            <mat-select formControlName="ciudad_id">
+              <mat-option *ngFor="let c of ciudades()" [value]="c.id_ciudad">
+                {{ c.nombre }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('ciudad_id')?.hasError('required')">Selecciona una ciudad</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="suc-form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Dirección</mat-label>
+            <input matInput formControlName="direccion" placeholder="Av. Camacho N° 1234" />
+            <mat-error *ngIf="form.get('direccion')?.hasError('required')">La dirección es obligatoria</mat-error>
+            <mat-error *ngIf="form.get('direccion')?.hasError('minlength')">Mínimo 3 caracteres</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono (opcional)</mat-label>
+            <input matInput formControlName="telefono" placeholder="(591) 2-240-0000" />
+          </mat-form-field>
+        </div>
+
+        <div class="suc-form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Horario de apertura</mat-label>
+            <input matInput formControlName="horario_apertura" type="time" />
+            <mat-error *ngIf="form.get('horario_apertura')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Horario de cierre</mat-label>
+            <input matInput formControlName="horario_cierre" type="time" />
+            <mat-error *ngIf="form.get('horario_cierre')?.hasError('required')">Obligatorio</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-error *ngIf="error()" class="error-msg">{{ error() }}</mat-error>
+
+        <div class="actions">
+          <button mat-stroked-button type="button" (click)="cancelar()" [disabled]="cargando()">
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="cargando()">
+            <mat-spinner *ngIf="cargando()" diameter="20"></mat-spinner>
+            <span *ngIf="!cargando()">{{ editando() ? 'Guardar cambios' : 'Crear sucursal' }}</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="suc-list">
+        <table mat-table [dataSource]="sucursales()" class="suc-table">
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let s">{{ s.nombre }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="ciudad">
+            <th mat-header-cell *matHeaderCellDef>Ciudad</th>
+            <td mat-cell *matCellDef="let s">{{ nombreCiudad(s) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="direccion">
+            <th mat-header-cell *matHeaderCellDef>Dirección</th>
+            <td mat-cell *matCellDef="let s">{{ s.direccion }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="telefono">
+            <th mat-header-cell *matHeaderCellDef>Teléfono</th>
+            <td mat-cell *matCellDef="let s">{{ s.telefono || '—' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="horario">
+            <th mat-header-cell *matHeaderCellDef>Horario</th>
+            <td mat-cell *matCellDef="let s">{{ cortarHora(s.horario_apertura) }} – {{ cortarHora(s.horario_cierre) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef>Estado</th>
+            <td mat-cell *matCellDef="let s">
+              <span class="chip" [class.chip-ok]="s.activo" [class.chip-off]="!s.activo">
+                {{ s.activo ? 'Activa' : 'Inactiva' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let s">
+              <div class="acciones">
+                <button mat-icon-button matTooltip="Editar" (click)="abrirEdicion(s)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  *ngIf="s.activo"
+                  mat-icon-button
+                  matTooltip="Desactivar"
+                  color="warn"
+                  (click)="desactivar(s)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnas()"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnas()"></tr>
+        </table>
+
+        <div *ngIf="sucursales().length === 0" class="vacio">
+          No hay sucursales que mostrar.
+        </div>
+
+        <mat-card
+          *ngIf="confirmandoBaja() !== null"
+          class="confirm-baja"
+          data-cy="confirmar-baja"
+        >
+          <mat-card-content>
+            <strong>Desactivar sucursal</strong>
+            <p>
+              Esta sucursal tiene operaciones activas (inventario o reservas).
+              ¿Está seguro de desactivarla de todos modos?
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-stroked-button (click)="confirmandoBaja.set(null)">Cancelar</button>
+            <button mat-raised-button color="warn" (click)="confirmarBaja(sucursalEnConfirmacion()!)">
+              Sí, desactivar
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

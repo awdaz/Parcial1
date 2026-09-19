@@ -4,7 +4,13 @@ import { Router } from '@angular/router';
 import { lastValueFrom, Observable, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { AuthResponse, LoginRequest, RegisterRequest, Usuario } from '../models/usuario';
+import {
+  AuthResponse,
+  LoginRequest,
+  ProfileUpdate,
+  RegisterRequest,
+  Usuario,
+} from '../models/usuario';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -42,6 +48,15 @@ export class AuthService {
 
   me(): Observable<Usuario> {
     return this.http.get<Usuario>(`${environment.apiUrl}/auth/me`);
+  }
+
+  updateProfile(data: ProfileUpdate): Observable<Usuario> {
+    return this.http.patch<Usuario>(`${environment.apiUrl}/auth/me`, data).pipe(
+      tap((usuario) => {
+        localStorage.setItem(this.usuarioKey, JSON.stringify(usuario));
+        this.currentUser.set(usuario);
+      }),
+    );
   }
 
   setSession(res: AuthResponse): void {
