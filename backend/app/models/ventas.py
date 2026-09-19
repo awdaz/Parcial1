@@ -1,4 +1,5 @@
 from datetime import datetime, date, time
+from typing import Optional
 
 from sqlalchemy import (
     Integer,
@@ -70,6 +71,10 @@ class ReservaItem(Base):
 
     reserva: Mapped["Reserva"] = relationship(back_populates="items")
     variante: Mapped["ProductoVariante"] = relationship()
+
+    @property
+    def producto(self) -> Optional["Producto"]:
+        return self.variante.producto if self.variante else None
 
 
 class Pedido(Base):

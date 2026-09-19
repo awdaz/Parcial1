@@ -1,0 +1,83 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <h1 class="page-title">
+    <mat-icon>inventory_2</mat-icon>
+    Preparar Reservas (Pendientes)
+  </h1>
+
+  <mat-card class="error-box" *ngIf="error()">
+    <mat-card-content>
+      <p>{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="cargar()">Reintentar</button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="vacio" *ngIf="!cargando() && !error() && reservas().length === 0">
+    <mat-card-content>
+      <mat-icon class="vacio-icon">event_available</mat-icon>
+      <p>No hay reservas pendientes en tu sucursal.</p>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="loading" *ngIf="cargando()">
+    <mat-spinner diameter="36"></mat-spinner>
+  </div>
+
+  <mat-card class="reserva-card" *ngFor="let r of reservas()">
+    <mat-card-header>
+      <mat-card-title>
+        Reserva #{{ r.id_reserva }} - {{ r.usuario?.nombre || 'Desconocido' }}
+      </mat-card-title>
+      <mat-card-subtitle>
+        Email: {{ r.usuario?.email || '—' }} | Tel: {{ r.usuario?.telefono || '—' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="datos">
+        <span class="dato">
+          <mat-icon>event</mat-icon>
+          Atención: <strong>{{ r.fecha_reserva }}</strong> a las
+          <strong>{{ r.hora_atencion?.slice?.(0, 5) ?? r.hora_atencion }}</strong>
+        </span>
+      </div>
+      <p class="article-title">Prendas a preparar:</p>
+      <ul class="articulos">
+        <li *ngFor="let i of r.items">
+          {{ itemLabel(i) }}
+        </li>
+      </ul>
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="actualizandoId() !== null"
+        (click)="preparar(r.id_reserva)"
+      >
+        <mat-icon>{{ actualizandoId() === r.id_reserva ? 'hourglass_top' : 'check_circle' }}</mat-icon>
+        Marcar como preparada
+      </button>
+
+      <button
+        mat-raised-button
+        color="accent"
+        [disabled]="actualizandoId() !== null"
+        (click)="completar(r.id_reserva)"
+      >
+        <mat-icon>{{ actualizandoId() === r.id_reserva ? 'hourglass_top' : 'done_all' }}</mat-icon>
+        Cliente presente (Completar)
+      </button>
+
+      <button
+        mat-raised-button
+        color="warn"
+        [disabled]="actualizandoId() !== null"
+        (click)="cancelarPorStock(r.id_reserva)"
+      >
+        <mat-icon>{{ actualizandoId() === r.id_reserva ? 'hourglass_top' : 'cancel' }}</mat-icon>
+        Falta de stock
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

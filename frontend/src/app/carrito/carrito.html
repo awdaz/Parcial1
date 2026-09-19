@@ -1,0 +1,113 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <h1 class="page-title">
+    <mat-icon>shopping_cart</mat-icon>
+    Carrito de reservas
+  </h1>
+
+  <mat-card class="exito" *ngIf="resultado()">
+    <mat-card-content>
+      <mat-icon color="primary" class="exito-icon">check_circle</mat-icon>
+      <h2>Reserva creada exitosamente, le esperamos en la tienda</h2>
+      <p>Número de reserva: <strong>#{{ resultado()!.id }}</strong></p>
+      <a mat-raised-button color="primary" routerLink="/catalogo">Seguir explorando</a>
+    </mat-card-content>
+  </mat-card>
+
+  <ng-container *ngIf="!resultado()">
+    <mat-card class="vacio" *ngIf="vacio()">
+      <mat-card-content>
+        <mat-icon class="vacio-icon">inventory_2</mat-icon>
+        <p>Tu carrito de reservas está vacío.</p>
+        <a mat-raised-button color="primary" routerLink="/catalogo">Ver catálogo</a>
+      </mat-card-content>
+    </mat-card>
+
+    <ng-container *ngIf="!vacio()">
+      <mat-card class="items-card">
+        <div class="item" *ngFor="let i of items()">
+          <img
+            class="item-img"
+            [src]="i.imagen_url || 'assets/placeholder.svg'"
+            (error)="onImagenError($event)"
+            alt="{{ i.nombre }}"
+          />
+          <div class="item-info">
+            <strong>{{ i.nombre }}</strong>
+            <span class="item-specs">
+              Talla {{ i.talla || '—' }} · Color {{ i.color || '—' }} · {{ i.sku }}
+            </span>
+            <span class="item-price">{{ i.precio | currency: 'Bs.' : 'symbol' : '1.2-2' }}</span>
+          </div>
+          <div class="item-actions">
+            <div class="qty">
+              <button mat-icon-button (click)="cambiarCantidad(i.variante_id, i.cantidad - 1)">
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+              <span class="qty-val">{{ i.cantidad }}</span>
+              <button mat-icon-button (click)="cambiarCantidad(i.variante_id, i.cantidad + 1)">
+                <mat-icon>add_circle_outline</mat-icon>
+              </button>
+            </div>
+            <button mat-icon-button color="warn" (click)="quitar(i.variante_id)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-card-actions class="total-row">
+          <span>
+            {{ totalPrendas() }} prenda(s) · Total estimado
+            {{ totalPrecio() | currency: 'Bs.' : 'symbol' : '1.2-2' }}
+          </span>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="detalle-card">
+        <mat-card-header>
+          <mat-card-title>Dónde y cuándo</mat-card-title>
+          <mat-card-subtitle>
+            Elige la sucursal y el horario de atención. La disponibilidad se verificará al confirmar.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <mat-form-field appearance="outline">
+            <mat-label>Sucursal</mat-label>
+            <mat-select [value]="sucursalSel()" (selectionChange)="sucursalSel.set($event.value)">
+              <mat-option *ngFor="let s of sucursales()" [value]="s.id_sucursal">
+                {{ s.nombre }} — {{ s.ciudad?.nombre || '' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <p class="horario" *ngIf="horarioLabel()">{{ horarioLabel() }}</p>
+
+          <div class="duo">
+            <mat-form-field appearance="outline">
+              <mat-label>Fecha de atención</mat-label>
+              <input matInput type="date" [min]="hoy" [value]="fechaSel()" (input)="fechaSel.set(inputFecha.value)" #inputFecha />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Hora de atención</mat-label>
+              <input matInput type="time" [value]="horaSel()" (input)="horaSel.set(inputHora.value)" #inputHora />
+            </mat-form-field>
+          </div>
+
+          <mat-error *ngIf="error()" class="error-box">{{ error() }}</mat-error>
+
+          <button
+            mat-raised-button
+            color="primary"
+            class="confirmar"
+            [disabled]="cargando()"
+            (click)="confirmar()"
+          >
+            <mat-icon>{{ cargando() ? 'hourglass_top' : 'event_available' }}</mat-icon>
+            {{ cargando() ? 'Confirmando...' : 'Confirmar reserva' }}
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </ng-container>
+</div>

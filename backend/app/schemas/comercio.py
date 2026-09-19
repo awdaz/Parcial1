@@ -7,6 +7,7 @@ from app.models.enums import (
     MetodoCompra,
     TipoPago,
 )
+from app.schemas.usuario import UsuarioOut
 
 # ============================================================
 # Ubicación
@@ -220,6 +221,8 @@ class ReservaItemOut(ReservaItemCreate):
     model_config = ConfigDict(from_attributes=True)
     id_reserva_item: int
     variante_id: int
+    variante: ProductoVarianteOut | None = None
+    producto: ProductoOut | None = None
 
 
 class ReservaOut(BaseModel):
@@ -231,6 +234,8 @@ class ReservaOut(BaseModel):
     hora_atencion: object
     estado: EstadoReserva
     fecha_creacion: datetime
+    usuario: UsuarioOut | None = None
+    sucursal: SucursalOut | None = None
     items: list[ReservaItemOut] = []
 
 

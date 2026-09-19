@@ -31,9 +31,9 @@
           {{ producto()!.descripcion }}
         </p>
         <mat-card-actions>
-          <button mat-raised-button color="primary" disabled>
+          <button mat-raised-button color="primary" [disabled]="!varianteSel()" (click)="agregarAlCarrito()">
             <mat-icon>add_shopping_cart</mat-icon>
-            Agregar al carrito (próximamente)
+            Agregar a carrito de reservas
           </button>
         </mat-card-actions>
       </div>

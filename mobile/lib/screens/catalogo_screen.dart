@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../models/producto.dart';
 import '../services/auth_service.dart';
+import '../services/carrito_service.dart';
 import '../services/catalogo_service.dart';
+import 'carrito_screen.dart';
 import 'login_screen.dart';
+import 'mis_reservas_screen.dart';
 import 'producto_detalle_screen.dart';
 
 class CatalogoScreen extends StatefulWidget {
@@ -14,13 +17,20 @@ class CatalogoScreen extends StatefulWidget {
 }
 
 class _CatalogoScreenState extends State<CatalogoScreen> {
+  final _carrito = CarritoService.instance;
   List<Producto>? _productos;
   String? _error;
 
   @override
   void initState() {
     super.initState();
+    _iniciarCarrito();
     _cargar();
+  }
+
+  Future<void> _iniciarCarrito() async {
+    await _carrito.init();
+    if (mounted) setState(() {});
   }
 
   Future<void> _cargar() async {
@@ -47,13 +57,51 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
     );
   }
 
+  Future<void> _abrirCarrito() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const CarritoScreen()),
+    );
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _abrirMisReservas() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const MisReservasScreen()),
+    );
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _abrirProducto(int idProducto) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ProductoDetalleScreen(productoId: idProducto),
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final productos = _productos;
+    final total = _carrito.totalPrendas;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Catálogo'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.receipt_long_outlined),
+            tooltip: 'Mis reservas',
+            onPressed: _abrirMisReservas,
+          ),
+          Badge(
+            label: Text('$total'),
+            isLabelVisible: total > 0,
+            child: IconButton(
+              icon: const Icon(Icons.shopping_cart_outlined),
+              tooltip: 'Carrito de reservas',
+              onPressed: _abrirCarrito,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Cerrar sesión',
@@ -100,13 +148,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                         itemCount: productos.length,
                         itemBuilder: (context, i) => _ProductoCard(
                           producto: productos[i],
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => ProductoDetalleScreen(
-                                productoId: productos[i].idProducto,
-                              ),
-                            ),
-                          ),
+                          onTap: () => _abrirProducto(productos[i].idProducto),
                         ),
                       ),
                     ),

@@ -1,5 +1,6 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +12,7 @@ import { CurrencyPipe, CommonModule } from '@angular/common';
 import { CatalogoService } from '../services/catalogo.service';
 import { InventarioService } from '../services/inventario.service';
 import { SucursalService } from '../services/sucursal.service';
+import { CarritoService } from '../services/carrito.service';
 import { Color, Producto, ProductoVariante, SucursalDisponibilidad, Talla } from '../models/catalogo';
 import { NavbarComponent } from '../shared/navbar';
 
@@ -34,9 +36,12 @@ import { NavbarComponent } from '../shared/navbar';
 })
 export class ProductoDetalleComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private catalogo = inject(CatalogoService);
   private inventario = inject(InventarioService);
   private sucursalServicio = inject(SucursalService);
+  private carrito = inject(CarritoService);
+  private snack = inject(MatSnackBar);
 
   readonly producto = signal<Producto | null>(null);
   readonly cargando = signal(true);
@@ -90,6 +95,28 @@ export class ProductoDetalleComponent implements OnInit {
 
   volver(): void {
     history.back();
+  }
+
+  agregarAlCarrito(): void {
+    const variante = this.varianteSel();
+    const producto = this.producto();
+    if (!variante || !producto) return;
+    this.carrito.agregar({
+      variante_id: variante.id_variante,
+      cantidad: 1,
+      nombre: producto.nombre,
+      sku: variante.sku,
+      color: variante.color?.nombre ?? null,
+      talla: variante.talla?.nombre ?? null,
+      precio: producto.precio + variante.precio_extra,
+      imagen_url: producto.imagen_url ?? null,
+    });
+    this.snack
+      .open('Prenda agregada al carrito de reservas', 'Ver carrito', {
+        duration: 3000,
+      })
+      .onAction()
+      .subscribe(() => this.router.navigate(['/carrito']));
   }
 
   onImagenError(event: Event): void {

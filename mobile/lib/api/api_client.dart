@@ -64,6 +64,25 @@ class ApiClient {
     return _decode(res);
   }
 
+  static Future<dynamic> patch(
+    String path, {
+    Object? body,
+    bool auth = true,
+  }) async {
+    final uri = Uri.parse('${baseUrl()}$path');
+    final headers = <String, String>{'Content-Type': 'application/json'};
+    if (auth) {
+      final token = await _token();
+      if (token != null) headers['Authorization'] = 'Bearer $token';
+    }
+    final res = await http.patch(
+      uri,
+      headers: headers,
+      body: body != null ? jsonEncode(body) : null,
+    );
+    return _decode(res);
+  }
+
   static Future<void> clearSession() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('fashionstore_token');

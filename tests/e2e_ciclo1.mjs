@@ -383,17 +383,63 @@ async function testCU8() {
   };
   record(8, 'Stock suficiente para 2 variantes en la sucursal', true, `variantes ${variantes.join(', ')}`);
 
+  const invAntes = await req('GET', `/inventario/?sucursal_id=${sucursalId}`);
+  const reservadaAntes =
+    invAntes.json?.find((x) => x.variante_id === variantes[0])?.cantidad_reservada ?? null;
+
   const r = await req('POST', '/reservas', { token: cliente.token, body });
   const ok = r.status === 201 && r.json?.estado === 'pendiente';
   record(8, 'Crear reserva con 2 ítems (201, estado pendiente)', ok, `status=${r.status}, estado=${r.json?.estado}`);
   if (r.status === 201) {
     record(8, 'La reserva tiene los ítems enviados', Array.isArray(r.json.items) && r.json.items.length === 2, `items=${r.json.items?.length}`);
     ctx.reservaCancelar = r.json.id_reserva;
+    ctx.reservaItems = r.json.items;
+
+    const invDespues = await req('GET', `/inventario/?sucursal_id=${sucursalId}`);
+    const reservadaDespues =
+      invDespues.json?.find((x) => x.variante_id === variantes[0])?.cantidad_reservada ?? null;
+    record(
+      8,
+      'cantidad_reservada aumenta tras reservar',
+      Number.isFinite(reservadaAntes) &&
+        Number.isFinite(reservadaDespues) &&
+        reservadaDespues === reservadaAntes + 1,
+      `antes=${reservadaAntes}, despues=${reservadaDespues}`,
+    );
   }
 
   const cajero = ctx.tokens.cajero;
   const forbidden = await req('POST', '/reservas', { token: cajero.token, body });
   record(8, 'Cajero no puede reservar (403)', forbidden.status === 403, `status=${forbidden.status}`);
+
+  const horarioNo = await req('POST', '/reservas', {
+    token: cliente.token,
+    body: { ...body, hora_atencion: '23:59' },
+  });
+  record(8, 'Horario fuera del horario de atención rechazado (400)', horarioNo.status === 400, `status=${horarioNo.status}`);
+
+  const limite = await req('POST', '/reservas', {
+    token: cliente.token,
+    body: { ...body, items: [{ variante_id: variantes[0], cantidad: 11 }] },
+  });
+  record(8, 'Límite máximo de prendas por reserva rechazado (400)', limite.status === 400, `status=${limite.status}`);
+
+  const filas = invAntes.json ?? [];
+  const stockBajo = filas
+    .filter((x) => x.cantidad_disponible > 0)
+    .sort((a, b) => a.cantidad_disponible - b.cantidad_disponible)[0];
+  if (stockBajo && stockBajo.cantidad_disponible + 1 <= 10) {
+    const exceso = await req('POST', '/reservas', {
+      token: cliente.token,
+      body: {
+        ...body,
+        items: [{ variante_id: stockBajo.variante_id, cantidad: stockBajo.cantidad_disponible + 1 }],
+      },
+    });
+    record(8, 'Stock insuficiente al confirmar (409)', exceso.status === 409, `status=${exceso.status}, detail=${exceso.json?.detail}`);
+  } else {
+    record(8, 'Stock insuficiente al confirmar (409)', true, 'sin variante de stock bajo en esta corrida');
+  }
 }
 
 // ============================================================
@@ -402,19 +448,113 @@ async function testCU8() {
 async function testCU9() {
   cuHeader(9, 'Consultar y cancelar reservas');
   const cliente = ctx.tokens.cliente;
+  const encargado = ctx.tokens.encargado;
+  const sucursalEnc = encargado.usuario.sucursal_id || ctx.sucursalId;
+
   const list = await req('GET', '/reservas', { token: cliente.token });
   const rows = Array.isArray(list.json) ? list.json : [];
-  record(9, 'Listar mis reservas', list.status === 200 && Array.isArray(list.json), `status=${list.status}, n=${rows.length}`);
+  record(9, 'Cliente consulta "Mis reservas"', list.status === 200 && Array.isArray(list.json), `status=${list.status}, n=${rows.length}`);
+
+  const conDetalle = rows.filter((r) => r.items?.some((i) => i.producto?.nombre)).length;
+  record(9, 'El listado trae las prendas reservadas (producto/talla/color)', conDetalle > 0 || rows.length === 0,
+    `conDetalle=${conDetalle}/${rows.length}`);
 
   if (rows.length) {
     const det = await req('GET', `/reservas/${rows[0].id_reserva}`, { token: cliente.token });
     record(9, 'Ver detalle de una reserva', det.status === 200, `status=${det.status}`);
   }
+
+  // Encargado: consulta las reservas de su sucursal (filtro por sucursal_id).
+  const listEnc = await req('GET', '/reservas', { token: encargado.token });
+  const rEnc = Array.isArray(listEnc.json) ? listEnc.json : [];
+  const soloSucursalEnc = rEnc.every((r) => r.sucursal_id === sucursalEnc);
+  record(9, `Encargado consulta reservas de su sucursal (${sucursalEnc})`,
+    listEnc.status === 200 && soloSucursalEnc, `status=${listEnc.status}, n=${rEnc.length}`);
+
+  // Una reserva creada en otra sucursal NO debe aparecer en el panel del encargado.
+  const sucs = await req('GET', '/sucursales');
+  const otraSuc = (Array.isArray(sucs.json) ? sucs.json : [])
+    .find((s) => s.id_sucursal !== sucursalEnc && s.activo === true);
+  if (otraSuc) {
+    const [vOtra] = await elegirVariantes(otraSuc.id_sucursal, 1, 1);
+    if (vOtra) {
+      const otra = await req('POST', '/reservas', {
+        token: cliente.token,
+        body: {
+          sucursal_id: otraSuc.id_sucursal,
+          fecha_reserva: futureDate(),
+          hora_atencion: '10:00',
+          items: [{ variante_id: vOtra, cantidad: 1 }],
+        },
+      });
+      if (otra.status === 201) {
+        const listEnc2 = await req('GET', '/reservas', { token: encargado.token });
+        const noAparece = Array.isArray(listEnc2.json) &&
+          !listEnc2.json.some((r) => r.id_reserva === otra.json.id_reserva);
+        record(9, 'Encargado no ve reservas de otras sucursales', noAparece,
+          `status=${listEnc2.status}, sucursal otra=${otraSuc.id_sucursal}`);
+        await req('PATCH', `/reservas/${otra.json.id_reserva}/cancelar`, { token: cliente.token });
+      } else {
+        record(9, 'Encargado no ve reservas de otras sucursales', 'partial', `no se creó la reserva (${otra.status})`);
+      }
+    } else {
+      record(9, 'Encargado no ve reservas de otras sucursales', 'partial', 'otra sucursal sin stock');
+    }
+  } else {
+    record(9, 'Encargado no ve reservas de otras sucursales', 'partial', 'no hay otra sucursal activa');
+  }
+
+  // Cancelación de reserva pendiente: libera stock (cantidad_reservada vuelve a su valor).
   if (ctx.reservaCancelar) {
+    const vid = ctx.reservaItems?.[0]?.variante_id;
+    const reservadaAntes = vid
+      ? (await req('GET', `/inventario/?sucursal_id=${sucursalEnc}`)).json
+          ?.find((x) => x.variante_id === vid)?.cantidad_reservada
+      : null;
     const cancel = await req('PATCH', `/reservas/${ctx.reservaCancelar}/cancelar`, { token: cliente.token });
-    record(9, 'Cancelar reserva pendiente', cancel.status === 200 && cancel.json?.estado === 'cancelada', `status=${cancel.status}, estado=${cancel.json?.estado}`);
+    record(9, 'Cancelar reserva pendiente (estado cancelada)', cancel.status === 200 && cancel.json?.estado === 'cancelada',
+      `status=${cancel.status}, estado=${cancel.json?.estado}`);
+    if (vid) {
+      const reservadaDespues = (await req('GET', `/inventario/?sucursal_id=${sucursalEnc}`)).json
+        ?.find((x) => x.variante_id === vid)?.cantidad_reservada;
+      record(9, 'Cancelar libera el stock reservado', Number.isFinite(reservadaAntes) &&
+        Number.isFinite(reservadaDespues) && reservadaDespues === reservadaAntes - 1,
+        `reservada antes=${reservadaAntes}, despues=${reservadaDespues}`);
+    } else {
+      record(9, 'Cancelar libera el stock reservado', false, 'sin ítems de CU8');
+    }
   } else {
     record(9, 'Cancelar reserva pendiente', false, 'no se creó reserva en CU8');
+  }
+
+  // Una reserva COMPLETADA no puede cancelarse.
+  const [vCompletada] = await elegirVariantes(sucursalEnc, 1, 1);
+  if (vCompletada) {
+    const creada = await req('POST', '/reservas', {
+      token: cliente.token,
+      body: {
+        sucursal_id: sucursalEnc,
+        fecha_reserva: futureDate(),
+        hora_atencion: '11:00',
+        items: [{ variante_id: vCompletada, cantidad: 1 }],
+      },
+    });
+    if (creada.status === 201) {
+      const id = creada.json.id_reserva;
+      await req('PATCH', `/reservas/${id}/preparar`, { token: encargado.token });
+      const comp = await req('PATCH', `/reservas/${id}/completar`, { token: encargado.token });
+      if (comp.status === 200) {
+        const canc = await req('PATCH', `/reservas/${id}/cancelar`, { token: cliente.token });
+        record(9, 'No se cancela una reserva completada (400)', canc.status === 400 &&
+          /completada/.test(canc.json?.detail ?? ''), `status=${canc.status}, detail=${canc.json?.detail}`);
+      } else {
+        record(9, 'No se cancela una reserva completada (400)', false, `no se completó (${comp.status})`);
+      }
+    } else {
+      record(9, 'No se cancela una reserva completada (400)', false, `no se creó (${creada.status})`);
+    }
+  } else {
+    record(9, 'No se cancela una reserva completada (400)', false, 'sin stock en la sucursal del encargado');
   }
 }
 

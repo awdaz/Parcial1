@@ -1,0 +1,155 @@
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.6rem;
+}
+
+.exito {
+  text-align: center;
+  padding: 24px;
+
+  .exito-icon {
+    font-size: 56px;
+    width: 56px;
+    height: 56px;
+  }
+
+  h2 {
+    margin: 12px 0 4px;
+  }
+
+  a {
+    margin-top: 12px;
+  }
+}
+
+.vacio {
+  text-align: center;
+  padding: 24px;
+
+  .vacio-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: var(--mat-sys-outline, #757575);
+  }
+
+  a {
+    margin-top: 12px;
+  }
+}
+
+.items-card {
+  margin-bottom: 16px;
+  padding: 8px 16px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant, #e0e0e0);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.item-img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #eee;
+  flex-shrink: 0;
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-specs {
+  color: var(--mat-sys-on-surface-variant, #666);
+  font-size: 0.85rem;
+}
+
+.item-price {
+  font-weight: 600;
+  color: var(--mat-sys-primary, #5c2e91);
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--mat-sys-on-surface-variant, #666);
+}
+
+.qty-val {
+  min-width: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.total-row {
+  justify-content: flex-end;
+  font-weight: 600;
+}
+
+.detalle-card {
+  padding: 8px 16px;
+}
+
+.detalle-card mat-form-field {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.duo {
+  display: flex;
+  gap: 16px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+.horario {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant, #666);
+}
+
+.error-box {
+  display: block;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: rgba(244, 67, 54, 0.08);
+}
+
+.confirmar {
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px;
+  font-size: 1rem;
+}

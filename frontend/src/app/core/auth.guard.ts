@@ -19,3 +19,24 @@ export const adminGuard: CanActivateFn = () => {
     ? true
     : router.createUrlTree(['/dashboard']);
 };
+
+export const encargadoGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  return auth.usuario()?.rol === 'encargado'
+    ? true
+    : router.createUrlTree(['/dashboard']);
+};
+
+/**
+ * En la ruta /reservas, redirige al encargado a su panel propio.
+ * Clientes y admins acceden normalmente.
+ */
+export const reservasRoleGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  if (auth.usuario()?.rol === 'encargado') {
+    return router.createUrlTree(['/encargado/reservas/pendientes']);
+  }
+  return true;
+};

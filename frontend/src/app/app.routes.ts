@@ -9,7 +9,10 @@ import { PerfilComponent } from './perfil/perfil';
 import { SucursalesComponent } from './sucursales/sucursales';
 import { CatalogoAdminComponent } from './catalogo-admin/catalogo-admin';
 import { UsuariosAdminComponent } from './usuarios-admin/usuarios-admin';
-import { adminGuard, authGuard } from './core/auth.guard';
+import { CarritoComponent } from './carrito/carrito';
+import { MisReservasComponent } from './reservas/mis-reservas';
+import { PrepararReservasComponent } from './encargado/reservas/preparar-reservas/preparar-reservas';
+import { adminGuard, authGuard, encargadoGuard, reservasRoleGuard } from './core/auth.guard';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -36,6 +39,11 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'carrito',
+    component: CarritoComponent,
+    canActivate: [authGuard],
+  },
+  {
     path: 'gestion/productos',
     component: CatalogoAdminComponent,
     canActivate: [authGuard, adminGuard],
@@ -52,13 +60,13 @@ export const routes: Routes = [
   },
   {
     path: 'reservas',
-    component: ProntoComponent,
-    data: {
-      titulo: 'Reservas',
-      icon: 'inventory_2',
-      desc: 'Gestiona tus reservas de prendas y su estado en tiempo real.',
-    },
-    canActivate: [authGuard],
+    component: MisReservasComponent,
+    canActivate: [authGuard, reservasRoleGuard],
+  },
+  {
+    path: 'encargado/reservas/pendientes',
+    component: PrepararReservasComponent,
+    canActivate: [authGuard, encargadoGuard],
   },
   {
     path: 'ventas',

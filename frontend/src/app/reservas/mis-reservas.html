@@ -1,0 +1,101 @@
+<app-navbar></app-navbar>
+
+<div class="page-container">
+  <h1 class="page-title">
+    <mat-icon>inventory_2</mat-icon>
+    {{ titulo() }}
+  </h1>
+
+  <mat-card class="error-box" *ngIf="error()">
+    <mat-card-content>
+      <p>{{ error() }}</p>
+      <button mat-raised-button color="primary" (click)="cargar()">Reintentar</button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="vacio" *ngIf="!cargando() && !error() && reservas().length === 0">
+    <mat-card-content>
+      <mat-icon class="vacio-icon">event_note</mat-icon>
+      <p>No tienes reservas activas.</p>
+      <a mat-raised-button color="primary" routerLink="/catalogo">Ver catálogo</a>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="loading" *ngIf="cargando()">
+    <mat-spinner diameter="36"></mat-spinner>
+  </div>
+
+  <mat-card class="reserva-card" *ngFor="let r of reservas()">
+    <mat-card-header>
+      <mat-card-title>
+        Reserva #{{ r.id_reserva }}
+        <span class="chip" [ngStyle]="{ 'background-color': estadoDe(r.estado).color }">
+          {{ estadoDe(r.estado).label }}
+        </span>
+      </mat-card-title>
+      <mat-card-subtitle *ngIf="!esCliente()">
+        Cliente: {{ r.usuario?.nombre || '—' }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="datos">
+        <span class="dato">
+          <mat-icon>event</mat-icon>
+          Fecha de atención: <strong>{{ r.fecha_reserva }}</strong> a las
+          <strong>{{ r.hora_atencion?.slice?.(0, 5) ?? r.hora_atencion }}</strong>
+        </span>
+        <span class="dato">
+          <mat-icon>store</mat-icon>
+          Sucursal: <strong>{{ r.sucursal?.nombre || '—' }}</strong>
+          <span class="dato-ciudad" *ngIf="r.sucursal?.ciudad">
+            ({{ r.sucursal!.ciudad!.nombre }})
+          </span>
+        </span>
+      </div>
+      <p class="article-title">Prendas reservadas</p>
+      <ul class="articulos">
+        <li *ngFor="let i of r.items">
+          {{ itemLabel(i) }}
+        </li>
+      </ul>
+    </mat-card-content>
+    <mat-card-actions *ngIf="puedeCancelar(r) || (esEncargado() && (r.estado === 'pendiente' || r.estado === 'preparada'))">
+      
+      <!-- Botones de Encargado -->
+      <ng-container *ngIf="esEncargado()">
+        <button
+          *ngIf="r.estado === 'pendiente'"
+          mat-raised-button
+          color="primary"
+          [disabled]="actualizandoId() !== null"
+          (click)="preparar(r.id_reserva)"
+        >
+          <mat-icon>{{ actualizandoId() === r.id_reserva ? 'hourglass_top' : 'check_circle' }}</mat-icon>
+          {{ actualizandoId() === r.id_reserva ? 'Preparando...' : 'Marcar como preparada' }}
+        </button>
+
+        <button
+          *ngIf="r.estado === 'preparada'"
+          mat-raised-button
+          color="accent"
+          [disabled]="actualizandoId() !== null"
+          (click)="completar(r.id_reserva)"
+        >
+          <mat-icon>{{ actualizandoId() === r.id_reserva ? 'hourglass_top' : 'done_all' }}</mat-icon>
+          {{ actualizandoId() === r.id_reserva ? 'Completando...' : 'Marcar como completada' }}
+        </button>
+      </ng-container>
+
+      <button
+        *ngIf="puedeCancelar(r)"
+        mat-raised-button
+        color="warn"
+        [disabled]="cancelandoId() !== null"
+        (click)="cancelar(r.id_reserva)"
+      >
+        <mat-icon>{{ cancelandoId() === r.id_reserva ? 'hourglass_top' : 'cancel' }}</mat-icon>
+        {{ cancelandoId() === r.id_reserva ? 'Cancelando...' : 'Cancelar reserva' }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

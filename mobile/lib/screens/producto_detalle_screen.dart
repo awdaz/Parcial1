@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../api/api_client.dart';
+import '../models/carrito.dart';
 import '../models/ciudad.dart';
 import '../models/producto.dart';
 import '../models/sucursal_disponibilidad.dart';
+import '../services/carrito_service.dart';
 import '../services/catalogo_service.dart';
 import '../services/inventario_service.dart';
 import '../services/sucursal_service.dart';
+import 'carrito_screen.dart';
 
 class ProductoDetalleScreen extends StatefulWidget {
   const ProductoDetalleScreen({super.key, required this.productoId});
@@ -143,6 +146,47 @@ class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
     _cargarDisponibilidad();
   }
 
+  Future<void> _agregarCarrito() async {
+    final producto = _producto;
+    if (producto == null) return;
+    final variante = _encontrarVariante();
+    if (variante == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Elige la talla y el color antes de agregar al carrito.'),
+        ),
+      );
+      return;
+    }
+    await CarritoService.instance.agregar(
+      CarritoItem(
+        varianteId: variante.idVariante,
+        cantidad: 1,
+        nombre: producto.nombre,
+        sku: variante.sku,
+        color: variante.color?.nombre,
+        talla: variante.talla?.nombre,
+        precio: producto.precio,
+        imagenUrl: producto.imagenUrl,
+      ),
+    );
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Prenda agregada al carrito de reservas.'),
+        action: SnackBarAction(
+          label: 'Ver carrito',
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const CarritoScreen()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -193,6 +237,15 @@ class _ProductoDetalleScreenState extends State<ProductoDetalleScreen> {
                   const SizedBox(height: 8),
                   Text(producto.descripcion!),
                 ],
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: _agregarCarrito,
+                    icon: const Icon(Icons.add_shopping_cart),
+                    label: const Text('Agregar a carrito de reservas'),
+                  ),
+                ),
               ],
             ),
           ),

@@ -20,6 +20,12 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { ruta: '/dashboard', label: 'Dashboard', icon: 'grid_view' },
   { ruta: '/catalogo', label: 'Catálogo', icon: 'storefront' },
+  {
+    ruta: '/carrito',
+    label: 'Carrito de reservas',
+    icon: 'shopping_cart',
+    roles: ['cliente', 'admin'],
+  },
 {
     ruta: '/gestion/productos',
     label: 'Gestión de productos',
@@ -33,7 +39,18 @@ export const NAV_ITEMS: NavItem[] = [
     roles: ['admin'],
   },
   { ruta: '/sucursales', label: 'Sucursales', icon: 'store' },
-  { ruta: '/reservas', label: 'Reservas', icon: 'inventory_2' },
+  {
+    ruta: '/reservas',
+    label: 'Reservas',
+    icon: 'calendar_month',
+    roles: ['cliente', 'admin'],
+  },
+  {
+    ruta: '/encargado/reservas/pendientes',
+    label: 'Preparar Reservas',
+    icon: 'inventory_2',
+    roles: ['encargado'],
+  },
   { ruta: '/ventas', label: 'Ventas / POS', icon: 'point_of_sale' },
   { ruta: '/reportes', label: 'Reportes', icon: 'insights' },
 ];
